@@ -7,7 +7,10 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha || true"
+    "test": "mocha || true",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "check":"jslint --edition=latest app/src/*.js"
   },
   "repository": {
     "type": "git",
@@ -30,9 +33,13 @@
   },
   "homepage": "https://github.com/Rodolopho/simple-event#readme",
   "devDependencies": {
-    "chai": "^4.1.2"
+    "chai": "^4.1.2",
+    "jslint": "^0.12.0",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
   },
   "dependencies": {
+    "rewire": "^3.0.2",
     "sinon": "^4.4.2"
   }
 }
