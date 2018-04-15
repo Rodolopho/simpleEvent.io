@@ -6,12 +6,17 @@ import * as Dispatch from "./dispatchReturns.js";
 //------------------------------------------------------------------------------------------
 	const $impleEvent={};
 //Container or holders
+	//conatiner to hold callback or event handlers supplied by user using $impleEvent.add(), method
 	$impleEvent.callbacks={};
+	//$imple Event native Collection of callbacks
 	$impleEvent.core={};
+	//Application initilization and config data, can be modified using $impleEvent.config(), method
 	$impleEvent.init=init;
+	//to string identifier
 	$impleEvent.toString=function(){return "Object $impleEvent";};
 //------------------------------------------------------------------------------------------
 //Helper Methods
+	//create elemet e.g $impleEvent.createElement("h1",{id:"h1", class:"one two ", text:"I am a title"});
 	$impleEvent.createElement=function(tag, attr){
 		var element=document.createElement(tag);
 			for (var keys in attr){
@@ -25,6 +30,7 @@ import * as Dispatch from "./dispatchReturns.js";
 		 return element;
 	};
 	//------------------------------------------------------------------------------------------
+	//Return {} with key and value, where key is name or data-get, and value is value="" or el.value
 	$impleEvent.getData=function(el){
 		var result={};
 		Array.prototype.forEach.call(el.querySelectorAll('['+$impleEvent.init.$dataGet+'], [name]'),function(e){
@@ -60,13 +66,15 @@ import * as Dispatch from "./dispatchReturns.js";
 		return result;
 	};
 	//------------------------------------------------------------------------------------------
+	//Validation  check and reference check to callback provide by user 
 	$impleEvent.validate=function(e,name, value){
 			var validate=e.getAttribute('data-validate');
 				if($impleEvent.callbacks[validate]){
 					return $impleEvent.callbacks[validate](e,name,value);
 				}
 			};
-	//------------------------------------------------------------------------------------------		
+	//------------------------------------------------------------------------------------------	
+	//data=>is agruments supplied in event attribute of element	after callback i.e event="click_callback_arg1_arg2"
 	$impleEvent.addEventListener=function(el,event,handler,data){
 		el.addEventListener(event,function(e){
 				//adding current event to args so that callback can acess it.
@@ -93,8 +101,13 @@ import * as Dispatch from "./dispatchReturns.js";
 					},false);
 		};
 	//------------------------------------------------------------------------------------------
+//End of Helper Methods
+
+
 
 //User accessors: User mostly user these method to interaction with application 
+
+	//It allow user to add callbacks, $impleEvent.add('methodname', function(){}).add({method1:function(){}, method2:function(){}})
 	$impleEvent.add=function(a,b){
 
 			if(Object.prototype.toString.call(a) === '[object Object]'){
@@ -117,8 +130,13 @@ import * as Dispatch from "./dispatchReturns.js";
 			return this;
 	};
 	//------------------------------------------------------------------------------------------
+	
+	//This will update $impleEvent or refresh $impleEvent on specified element.
+
 	$impleEvent.update=function(el){ this.launch(el)};
 	//------------------------------------------------------------------------------------------
+
+	//Allows to congif the application e.g, $impleElement.config('$root', document.getElementById('app'));
 	$impleEvent.config=function(a,b){
 		//if {} is passed
 		if(Object.prototype.toString.call(a) === '[object Object]'){
@@ -135,12 +153,14 @@ import * as Dispatch from "./dispatchReturns.js";
 				if(this.init.hasOwnProperty(a)){
 						this.init[a]=b;
 					}else{
-						console.error("Unvalid Config Property :" + keys);
+						console.error("Unvalid Config Property :" + a);
 					}
 			} 
 			return this;
 	};
 	//------------------------------------------------------------------------------------------
+
+	//Lauched the Application
 	$impleEvent.launch=function(el){
 		//find the elements with event attribute and attach a handler and listener
 			var element=el || this.init.$root;
@@ -159,16 +179,23 @@ import * as Dispatch from "./dispatchReturns.js";
 	//------------------------------------------------------------------------------------------
 
 //processors
+	//Responisble for binding event to element with coressponding callbacks
 	$impleEvent.eventPatcher=eventPatcher;
 	//------------------------------------------------------------------------------------------
+
+	//Handle the returns from callback when event occurs, if callback has a return
 	$impleEvent.dispatchReturns=Dispatch.dispatchReturns;
 	$impleEvent.dispatcher=Dispatch.dispatcher;
 	$impleEvent.dispatchSingle=Dispatch.dispatchSingle;
 	$impleEvent.dispatchArray=Dispatch.dispatchArray;
 	$impleEvent.dataFeedValue=Dispatch.dataFeedValue;
 	//------------------------------------------------------------------------------------------
+
+	//Responsible for render html to the document, with approppriate returns
 	$impleEvent.render=render;
 	//------------------------------------------------------------------------------------------
+
+	//attach $implEvent to Window after checking for namespace collision and duplicate implementation of library
 	if(window.$impleEvent){
 		if(window.$impleEvent.toString()==="Object $impleEvent"){
 			console.warn("Duplicate $impleEvent libaray Found! Make sure you are not importing $impleEvent more than one time. ");

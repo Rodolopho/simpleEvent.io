@@ -1,5 +1,5 @@
 export default function eventPatcher(el,eventList){
-	//event list is the lsit of events like [click_somefunc,dbl_someOtherfunc]
+	//event list is the list of events like [click_somefunc,dbl_someOtherfunc]
 		for(var i=0; i<eventList.length;i++){
 				var data=eventList[i].split($impleEvent.init.$seperator);
 				//check event data has atleast eventname and callback
@@ -21,7 +21,7 @@ export default function eventPatcher(el,eventList){
 									var args=data.slice(3);
 									args.unshift(interval);
 									 //caputure any return from callback to feed return feeder
-										$return=$impleEvent.core[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
+										var $return=$impleEvent.core[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
 											if($return){
 												//if any return handle it
 												if(el.hasAttribute('data-filter')){
@@ -97,7 +97,7 @@ export default function eventPatcher(el,eventList){
 									var args=data.slice(3);
 									args.unshift(timer);
 									 //caputure any return from callback to feed return feeder
-										$return=$impleEvent.core[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
+										var $return=$impleEvent.core[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
 											if($return){
 												//if any return handle it
 												if(el.hasAttribute('data-filter')){
@@ -123,7 +123,7 @@ export default function eventPatcher(el,eventList){
 									var args=data.slice(3);
 									args.unshift(timer);
 									 //caputure any return from callback to feed return feeder
-										$return=$impleEvent.callbacks[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
+										var $return=$impleEvent.callbacks[data[1]].apply(el,args);//give callback this scope of addEventListener i.e target element
 											if($return){
 												//if any return handle it
 												if(el.hasAttribute('data-filter')){
