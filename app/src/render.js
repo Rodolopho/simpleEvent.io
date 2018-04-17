@@ -1,6 +1,18 @@
 export var  render={
 		id:0,
 		list:{},
+		cloneElement:function(el){
+			return this.obj2Html(this.html2Obj(el,{},1));
+		},
+		html2Text:function(el,style){
+			// where styleing is object e.g{
+			// attr="some css",
+			// value="some css",
+			// tagName="some css",//<h1></h1>
+			// space=4
+			// }
+		
+		},
 		html2Obj:function(el,obj,i){
 
 				obj[i]={};
@@ -47,6 +59,7 @@ export var  render={
 
 					}else if(obj[i].tagName){
 						var ele=$impleEvent.createElement(obj[i].tagName, obj[i].attributes);
+						if(ele.id){ele.id=ele.id+i};
 						el.appendChild(ele);
 
 						this.obj2Html(obj[i],ele);
@@ -56,6 +69,7 @@ export var  render={
 
 			}else{
 				el=$impleEvent.createElement(obj[1].tagName, obj[1].attributes);
+				if(el.id){el.id=el.id+1};
 				this.obj2Html(obj[1],el);
 				
 			}

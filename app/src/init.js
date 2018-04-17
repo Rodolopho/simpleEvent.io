@@ -14,6 +14,6 @@ export  var init={
 			//return { returnTo:{el:document.getElementById('h1')}, data:{name:"myname"}}
 			$returnTo:"el",//define your outer scope element holder
 			$root:document,//by default
-			$global:document,//by default
+			$global:document,//by defau lt 
 	
 };

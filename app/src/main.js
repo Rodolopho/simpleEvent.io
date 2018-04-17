@@ -1,8 +1,9 @@
-
+//import {component} from './component.js';
 import {init} from './init.js';
 import {render} from "./render.js";
 import eventPatcher from "./eventPatcher.js";
-import * as Dispatch from "./dispatchReturns.js";
+import * as Dispatch from "./dispatchReturnBeta.js";
+import dispatchObject from "./dispatchObjectBeta.js";
 //------------------------------------------------------------------------------------------
 	const $impleEvent={};
 //Container or holders
@@ -187,12 +188,14 @@ import * as Dispatch from "./dispatchReturns.js";
 	$impleEvent.dispatchReturns=Dispatch.dispatchReturns;
 	$impleEvent.dispatcher=Dispatch.dispatcher;
 	$impleEvent.dispatchSingle=Dispatch.dispatchSingle;
-	$impleEvent.dispatchArray=Dispatch.dispatchArray;
+	$impleEvent.dispatchSelf=Dispatch.dispatchSelf;
 	$impleEvent.dataFeedValue=Dispatch.dataFeedValue;
+	$impleEvent.dispatchObject=dispatchObject;
 	//------------------------------------------------------------------------------------------
 
 	//Responsible for render html to the document, with approppriate returns
 	$impleEvent.render=render;
+	//$impleEvent.component=component;
 	//------------------------------------------------------------------------------------------
 
 	//attach $implEvent to Window after checking for namespace collision and duplicate implementation of library

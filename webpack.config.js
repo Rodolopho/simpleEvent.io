@@ -1,4 +1,5 @@
 const path=require('path');
+//const bootstrap=require('bootstrap');
 
 module.exports={
 	entry:'./app/src/main.js',
@@ -6,6 +7,9 @@ module.exports={
 	output:{
 		filename:"$impleEvent.js",
 		path:path.resolve(__dirname,'app','dist'),
-	}
+	},
+	devServer:{
+		contentBase:"./app/site/",
+	},
 
 };//EOModuleExports
