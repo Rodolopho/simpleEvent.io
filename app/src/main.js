@@ -1,16 +1,17 @@
-//import {component} from './component.js';
+
 import {init} from './init.js';
 import {render} from "./render.js";
 import eventPatcher from "./eventPatcher.js";
 import * as Dispatch from "./dispatchReturnBeta.js";
 import dispatchObject from "./dispatchObjectBeta.js";
+import {core} from './core.js';
 //------------------------------------------------------------------------------------------
 	const $impleEvent={};
 //Container or holders
 	//conatiner to hold callback or event handlers supplied by user using $impleEvent.add(), method
 	$impleEvent.callbacks={};
 	//$imple Event native Collection of callbacks
-	$impleEvent.core={};
+	$impleEvent.core=core;
 	//Application initilization and config data, can be modified using $impleEvent.config(), method
 	$impleEvent.init=init;
 	//to string identifier
@@ -68,7 +69,9 @@ import dispatchObject from "./dispatchObjectBeta.js";
 	};
 	//------------------------------------------------------------------------------------------
 	//Validation  check and reference check to callback provide by user 
-	$impleEvent.validate=function(e,name, value){
+	//this function is called by $impleEvent.getData(); which passes e, name, value to this function
+	//only applicable to user input not applicable to getAttribute("value");
+	$impleEvent.validate=function(e,name, value){//e=event, name=name attribute value e.g name, email
 			var validate=e.getAttribute('data-validate');
 				if($impleEvent.callbacks[validate]){
 					return $impleEvent.callbacks[validate](e,name,value);
@@ -80,6 +83,11 @@ import dispatchObject from "./dispatchObjectBeta.js";
 		el.addEventListener(event,function(e){
 				//adding current event to args so that callback can acess it.
 				var args=data.slice(2);
+				var getIndex=args.indexOf('$value');
+
+				if(getIndex!==-1){
+					args[getIndex]=el.value;
+				}
 				args.unshift(e);
 				 //caputure any return from callback to feed return feeder
 					var $return=handler.apply(this,args);//give callback this scope of addEventListener i.e target element
@@ -195,7 +203,6 @@ import dispatchObject from "./dispatchObjectBeta.js";
 
 	//Responsible for render html to the document, with approppriate returns
 	$impleEvent.render=render;
-	//$impleEvent.component=component;
 	//------------------------------------------------------------------------------------------
 
 	//attach $implEvent to Window after checking for namespace collision and duplicate implementation of library
