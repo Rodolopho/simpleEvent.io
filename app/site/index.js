@@ -9,7 +9,7 @@ $impleEvent.add('array',function(e,a,b){
 		}
 	}
 	return [{name:"two"}, {name:"three"}, {name:"four"}];
-}).add("reverse",function(a){return a.reverse()});
+}).add("reverswe",function(a){return a.reverse()}).add("myFunction", function(e,a){return a; console.log(a)});
 
 
 $impleEvent.add("update",function(e,a,b){

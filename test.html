@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple event Devlopment</title>
+	<style>
+		.one{
+			color:red;
+			background: olive;
+		}
+		.two{
+			color:yellow;
+			display:block;
+		}
+	</style>
+</head>
+<body style="margin: 20px">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!-- <script type="text/javascript" src="app/app.js"></script>
+<script type="text/javascript" src="app/dispatchReturnsAlpha.js"></script>
+<script type="text/javascript" src="app/eventPatcher.js"></script>
+<script type="text/javascript" src=""></script> -->
+
+<script type="text/javascript" src="app/dist/$impleEvent.js"></script>
+<!-- --------------------------------codeig are -->
+
+<button event="click_addClass_one_h1" class="one	">Click</button>
+
+<h1 id="h1" class="two" event="click_scale_2">Hello world</h1>
+
+
+<!-- --------------------------kwmckck-----------k---- -->
+<script type="text/javascript">
+
+	$impleEvent.launch();
+</script>
+
+
+</body>
+</html>

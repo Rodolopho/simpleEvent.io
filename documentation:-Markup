@@ -1,0 +1,10 @@
+documentation:-Markup
+# Simple Event: Javascript framework for Event Management
+--------------------
+## Basic Usage
+1) Return simple string on Event
+ <button even="click_return_hello/sworld">Return Some thing
+ <span class="return"></span>
+ </button>
+ 2) Return Simple String on Event to element scope
+ 	<button event="click_return_Hello/swWorld_id3"> Return To element with id=id3</button>
