@@ -17,7 +17,7 @@ const path=require('path');
 //const bootstrap=require('bootstrap');
 
 module.exports={
-	entry:'./app/srcbeta/index.js',
+	entry:'./app/src/index.js',
 	devtool:'inline-source-map',
 	output:{
 		filename:"$impleEventbeta.js",

@@ -9,6 +9,9 @@ export  var init={
 			//gets data with key and value, data-get="name" value="my name"
 			$dataGet:"data-get",//
 			$dataAppend:"data-append",//APPENDS or replace 
+			$dataError:"data-error",//for error
+			$dataMessage:"data-message",
+			$dataNotification:'data-notification', 
 		//APPLICATION
 			$notification:null,
 			//return { returnTo:{el:document.getElementById('h1')}, data:{name:"myname"}}

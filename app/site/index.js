@@ -1,4 +1,4 @@
-
+// var ele=new XElement('div',{class:"fs34px", style:'border:1px solid black;paddding:20px'}, 'body');
 
 $impleEvent.add('array',function(e,a,b){
 	//return ["one", "two", "three"];

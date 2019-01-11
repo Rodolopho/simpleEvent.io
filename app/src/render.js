@@ -1,18 +1,12 @@
 export var  render={
-		id:0,
+	//IT will convert html to obj and obj to Html
+		id:0,//
 		list:{},
 		cloneElement:function(el){
+			//return clone or clone new element every time its called
 			return this.obj2Html(this.html2Obj(el,{},1));
 		},
-		html2Text:function(el,style){
-			// where styleing is object e.g{
-			// attr="some css",
-			// value="some css",
-			// tagName="some css",//<h1></h1>
-			// space=4
-			// }
 		
-		},
 		html2Obj:function(el,obj,i){
 
 				obj[i]={};
@@ -92,7 +86,7 @@ export var  render={
 		 	Array.prototype.forEach.call($return,function(e){
 		 		var ele=$impleEvent.render.obj2Html(obj,false);
 		 		el.appendChild(ele);
-		 		$impleEvent.dispatchReturns(ele, e);
+		 		$impleEvent.manageReturns(ele, e);
 		 		$impleEvent.update(ele);
 		 	});
 		 	

@@ -1,59 +1,47 @@
 export var core={
 
-	//---------helpers for core---------------
-	scopify:function(el,scope,classname){
-		if(scope=="global"){//global
-			return document.querySelectorAll("."+classname);
+	close:function(e,id,a){
+		var el=(id=="parent")?this.parentNode:document.getElementById(id);
+		if(el){
+			if(el.style.display=="none") {return false};
 
-		}else if(scope=="parent"){//parent
-			return el.parentNode.querySelectorAll("."+classname);
-
-		}else if(scope=="grandParent"){//grandparent
-			return el.parentNode.parentNode.querySelectorAll("."+classname);
-
-		}else{//slef
-			return el.querySelectorAll("."+classname);
-
-		}
-
-
-	},
-	refactorArgs:function(args,n){
-
-		var n=n||0;
-		n=n+1;//add 1 for e evnet variable
-		var scope=null;
-		var classname=null;
-		var arg=Array.prototype.slice.call(args,1,n);
-		//if its has clasname or scope
-		if(args.length>n){
-			if(args[n]){
-				classname=args[n];
-				//console.log(classname);
+			if(a==="true"){
+				var result=confirm('Are you sure want to close?');
+				$impleEvent.core.animate.call(this, e, "bounce");
+				return result?(el.style.display="none"):false;
 			}
-			if(args[n+1]){
-				scope=args[n+1];
-				//console.log(scope);
-			}
-		return {
-				classname:classname,
-				args:arg,
-				scope:scope,
-			};
-
-		}else if(args.length==n){
-			return arg;
+			el.style.display="none";
 		}else{
-			return false;
+			console.warn("close error:-Cannot Find Element with id:"+id);
 		}
-		
-		
-	},
-	main:function(){
+		// this.parentNode.style.transition="all 0.35s";
+		// 		this.parentNode.style.display="none";
 
+	},
+	animate:function(e,a,b){
+		//Require animate .js
+		// https://daneden.github.io/'animate.css' for animate to work
+		var el=b?document.getElementById(b):this;
+		
+		// el.classList.remove("animated",a);
+
+		// el.classList.add("animated",a);
+		// //el.classList.remove("animated",a);
+		// var i=setTimeout(function(){
+		// 	el.classList.remove("animated",a);
+		// 	//clearTimeout(i);
+		// },1000)
+		el.setAttribute('class',el.hasAttribute('class')?el.getAttribute('class')+ " " +a+" animated":" " +a+" animated");
+		var t=setTimeout(function(){
+			el.setAttribute('class',el.getAttribute('class').replace(a,"").replace('animated',"").trim());
+			clearTimeout(t);
+		},1000);
+		
+		
 	},
 	//----------------------------core-------
 	dataChanger:function(e,a,b){
+
 		if(this.hasAttribute("data-get")){
 			if(!$impleEvent.form){
 				var form=$impleEvent.createElement("div", {
@@ -87,10 +75,11 @@ export var core={
 			$impleEvent.form.input.onchange=function(){
 				
 				_this.setAttribute("value",this.value);
-				console.log(_this);
+				$impleEvent.manageReturns(_this,this.value)
+				//return this.getAttribute("value");
 			}
 		}
-
+		
 	},
 	carousel:function(e,a,b){
 		var images=this.getElementsByTagName("img");
@@ -105,18 +94,7 @@ export var core={
 		if(index>images.length){index=1}
 			images[index-1].style.display="block";
 		this.setAttribute("index",index);
-		    // var i;
-		    // var x = images;
-		    // for (i = 0; i < x.length; i++) {
-		    //    x[i].style.display = "none";
-		    // }
-		    // var index=parseInt(this.getAttribute('index'));
-		    // this.setAttribute("index",index+1);
-		    // if (index > x.length) {index=1}
-		    // x[index-1].style.display = "block";
-		    // //setTimeout(carousel, 3000);
-		    console.log("hiiii");
-		//}
+		    
 	},
 	//-----------------------class------------------------
 	addClass:function(e,a,b){
@@ -196,8 +174,18 @@ export var core={
 		}
 
 	},
-	return:function(e,a,id){
+	return:function(e,a){
 
+		if(a){
+			return a.replace(/\/s/g," ").trim();
+		}else{
+
+			console.warn("Returning empty string  on " + e.type);
+			return " ";
+		}
+
+	},
+	returnTo:function(e,id,a){
 		if( a && document.getElementById(id)){
 			a=a.replace(/\/s/g," ").trim();
 			return {
@@ -208,10 +196,7 @@ export var core={
 					}
 				}
 			}
-		}else if(a){
-			return a.replace(/\/s/g," ").trim();
 		}else{
-
 			console.warn("Returning empty string  on " + e.type);
 			return " ";
 		}

@@ -35,7 +35,7 @@ import {core} from './core.js';
 	};
 	$impleEvent.error=function(el,$return){
 		Array.prototype.forEach.call(el.querySelectorAll($impleEvent.init.$className),function(e){
-					
+					console.log(e);
 					if(e.hasAttribute($impleEvent.init.$dataError)){
 						var key=e.getAttribute($impleEvent.init.$dataError).trim();
 						if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName){
