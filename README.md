@@ -7,17 +7,20 @@
 
 <button event="click_closeModal_id">close</button>
 ```
-###### Here you proving a callback function "openModal and closeModal" for event type "click" on above element.You can provide muliple events just seperating it with space.ie <button event="click_showForm dblclick_fillForm">Test</button>
+###### Here you proving a callback function "openModal and closeModal" for event type "click" on above element.You can provide muliple events just seperating it with space.ie 
+```html
+<button event="click_showForm dblclick_fillForm">Test</button>
+```
 
 #### 2) Once you declare event attribute with atleast event type and callback function, second thing you do is register callback using $impleEvent.register(); or $impleEvent.add(); method. 
 
 ```javascript
-    $impleEvent.add("openModal",function(e,arg1){
+    $impleEvent.add("openModal", function(e,arg1){
         //where e is event;
         document.getElementById("arg1").style.display="block";
 
       })
-      .add("closeModal",function(e,arg1){
+      .add("closeModal", function(e,arg1){
           if(confirm("Are you sure want to close ?")){
             document.getElementById("arg1").style.display="none";
           }
@@ -70,9 +73,9 @@ $impleEvent.add('validate',function(e,field){
 ```
 #### Here we have few things to note, every callback function is bind to the event target element where event attribute is define , we can access the element via "this" inside the callback function.
 The first argument of callbacks will be always "event".
-You can caputure the return inside a element with "return" class name. Return must be either, string, number or Html element. If you want to return more than single data, you can use object as above. And when you required to send list of data which can be looped you can use array as a return. 
+You can caputure the returns inside a element with "return" class name. Returns must be either, string, number or Html element. If you want to return more than single data, you can use object as above. And when you required to send list of data which can be looped you can use array as a return. 
 
-When you just return data from your callback it search for a element with class name "return" in by queryselector form its parentElement of your current event target element to embed your return. You should alway use empty element with class name "return " as  a place holder for return element to embed, however you can also append the return data if you desire to so by adding 'data-append' attribute on the placeholder element .
+When you just return data from your callback it search for a element with class name "return"  by queryselector form its parentElement of your current event target element to embed your return. You should alway use empty element with class name "return " as  a place holder for return element to embed, however you can also append the return data if you desire to so by adding 'data-append' attribute on the placeholder element .
 
 ### Return String, Number and HTML;
 ##### You can return string , number or HTML simply returning it from callback function.
@@ -226,27 +229,7 @@ $impleEvent.add('updateTime',function(e){
 ```
 Here incase of interval and timout we alwasy pass first argumnet a time in ms in our event attribute , , also note how we can reuse our callback function  in diffrent cases. Incase of interval and timeout the first argument in your call back is the intervel or timeout in case you want to clearTimout or clearInterval.
 
-```html
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-   
-    <title>AliasCSS Template</title>
-
-    <!-- AliasCSS -->
-    <link href="css/alias.min.css" rel="stylesheet">
-
-  </head>
-  <body>
-    <h1 class="fw6 br5px bgc_hccc c_ngreen p10px dib">Hello, world!</h1>
-  </body>
-  <script src="js/accs.js"></script>
-</html>
-```
 
 
 
