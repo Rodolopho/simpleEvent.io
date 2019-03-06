@@ -19,18 +19,9 @@ export var core={
 
 	},
 	animate:function(e,a,b){
-		//Require animate .js
+		//Require animate.css
 		// https://daneden.github.io/'animate.css' for animate to work
 		var el=b?document.getElementById(b):this;
-		
-		// el.classList.remove("animated",a);
-
-		// el.classList.add("animated",a);
-		// //el.classList.remove("animated",a);
-		// var i=setTimeout(function(){
-		// 	el.classList.remove("animated",a);
-		// 	//clearTimeout(i);
-		// },1000)
 		el.setAttribute('class',el.hasAttribute('class')?el.getAttribute('class')+ " " +a+" animated":" " +a+" animated");
 		var t=setTimeout(function(){
 			el.setAttribute('class',el.getAttribute('class').replace(a,"").replace('animated',"").trim());

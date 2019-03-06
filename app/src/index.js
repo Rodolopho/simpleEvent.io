@@ -4,7 +4,6 @@ import {render} from "./render.js";
 import eventManager from "./event.js";
 import  manageReturns from "./return.js";
 import  getData from "./retrive.js";
-//import dispatchObject from "./dispatchObjectBeta.js";
 import {core} from './core.js';
 //------------------------------------------------------------------------------------------
 	const $impleEvent={};
@@ -19,6 +18,23 @@ import {core} from './core.js';
 	$impleEvent.toString=function(){return "Object $impleEvent";};
 //------------------------------------------------------------------------------------------
 //Helper Methods
+	//Custom Add event listner to avoid asynchronus isss
+	$impleEvent.addEventListener=function(element,event,callback,option){
+		
+		element.addEventListener(event,callback,option);
+	};
+	//Covert html string in html.
+	$impleEvent.asHTML=function(string){
+		var ele=this.createElement('div');
+		ele.innerHTML=string;
+		 return this.render.cloneElement(ele).firstElementChild;
+
+
+
+	};
+	$impleEvent.html=function(string){
+		return this.asHTML(string);
+	}
 	//create element e.g $impleEvent.createElement("h1",{id:"h1", class:"one two ", text:"I am a title"});
 	//used in render
 	$impleEvent.createElement=function(tag, attr){
@@ -33,175 +49,18 @@ import {core} from './core.js';
 		      }
 		 return element;
 	};
-	$impleEvent.error=function(el,$return){
-		Array.prototype.forEach.call(el.querySelectorAll($impleEvent.init.$className),function(e){
-					console.log(e);
-					if(e.hasAttribute($impleEvent.init.$dataError)){
-						var key=e.getAttribute($impleEvent.init.$dataError).trim();
-						if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName){
-							if(!key){
-								//Not Html then its string or number
-								if(!$return.nodeName){
-									//doest string or number need to append or repalce 
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//need to be append
-												e.appendChild(document.createTextNode($return))
-										}else{
-											//clear contaner and put string/number
-											e.innerHTML="";
-											e.appendChild(document.createTextNode($return));
-										}
-								}else{
-									//ITs HTML ELement
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//append
-											//clone element otherwise cant apped to muliple places
-												e.appendChild($impleEvent.render.cloneElement($return));
-										}else{
-											//replace the container with new content
-											e.innerHTML="";
-											e.appendChild($impleEvent.render.cloneElement($return));
-										}
-								}
-							}//ENDOFIFKEY
-						}else if(key){
-							//handle nested keys i.e data.person.name.firstname
-								//------------------------------------------------------------------
-									var value=null;
-									var feed=key.split('.');
-									if(! $return.hasOwnProperty(feed[0])) return false;
-										if(feed.length){
-											if(feed.length==1){
-												value= $return[key];
-											}else if(feed.length>1){
-												var result=$return;
-												for(var j=0; j<feed.length; j++){
-													if(result[feed[j]]){
-														result=result[feed[j]];
-													}else{
-														console.log("Cannot find:" + key + " in " +$return);
-														break;
-													}
-													
-													//
-												}
-												
-												value=result;
+	// $impleEvent.notify=function(Message){
+	// 	// var st=setTimeout(function(){
+	// 	// 	if($impleEvent.init.$noti)
+	// 	// },3000)
 
-											}
-										}
-								
+	// };
+	// $impleEvent.alert=function(){
 
-								//-------------------------------------------------------------------
-								
-
-								if(value){
-									if(typeof value === 'string' || typeof value === 'number' || value.nodeName ){
-										
-												if(!value.nodeName){
-													if(e.hasAttribute($impleEvent.init.$dataAppend)){
-																e.appendChild(document.createTextNode(value))
-															}else{
-																e.innerHTML="";
-																e.appendChild(document.createTextNode(value));
-															}
-												}else{
-													//console.log(value);
-													if(e.hasAttribute($impleEvent.init.$dataAppend)){
-																e.appendChild($impleEvent.render.cloneElement(value));
-															}else{
-																e.innerHTML="";
-																e.appendChild($impleEvent.render.cloneElement(value));
-															}
-												}
-											
-										}else{
-											console.error("Only String , Number and Html Element  can be embeded; Cannot embed "+value + "for "+key + "in : "+ e.nodeName.toLowerCase()+ " Html Element");
-											console.log(e);
-										}
-								
-								 }//End of Value
-						}else{
-								console.warn("Make sure you have :" + $impleEvent.init.$dataError + " attribute to handle given return" + $return )
-						}//end of key
-					}//ENDOFIFDATAERROR
-					//console.log($return);
-					//-------------------------------------------------------------------------------------	
-				// 		//Check it rightfull container for object returns
-				// 		if(e.hasAttribute($impleEvent.init.$dataError)){
-				// 			//Get the key from [data-feed] to retrive value from key-value pair
-				// 			var key=e.getAttribute($impleEvent.init.$dataError).trim();
-				// 			//if has value procced
-				// 			if(!key){
-
-				// 			}
-				// 			if(key){
-				// 				//handle nested keys i.e data.person.name.firstname
-				// 				//------------------------------------------------------------------
-				// 					var value=null;
-				// 					var feed=key.split('.');
-				// 					if(! $return.hasOwnProperty(feed[0])) return false;
-				// 						if(feed.length){
-				// 							if(feed.length==1){
-				// 								value= $return[key];
-				// 							}else if(feed.length>1){
-				// 								var result=$return;
-				// 								for(var j=0; j<feed.length; j++){
-				// 									if(result[feed[j]]){
-				// 										result=result[feed[j]];
-				// 									}else{
-				// 										console.log("Cannot find:" + key + " in " +$return);
-				// 										break;
-				// 									}
-													
-				// 									//
-				// 								}
-												
-				// 								value=result;
-
-				// 							}
-				// 						}
-								
-
-				// 				//-------------------------------------------------------------------
-								
-
-				// 				if(value){
-				// 					if(typeof value === 'string' || typeof value === 'number' || value.nodeName ){
-										
-				// 								if(!value.nodeName){
-				// 									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-				// 												e.appendChild(document.createTextNode(value))
-				// 											}else{
-				// 												e.innerHTML="";
-				// 												e.appendChild(document.createTextNode(value));
-				// 											}
-				// 								}else{
-				// 									//console.log(value);
-				// 									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-				// 												e.appendChild($impleEvent.render.cloneElement(value));
-				// 											}else{
-				// 												e.innerHTML="";
-				// 												e.appendChild($impleEvent.render.cloneElement(value));
-				// 											}
-				// 								}
-											
-				// 						}else{
-				// 							console.error("Only String , Number and Html Element  can be embeded; Cannot embed "+value + "for "+key + "in : "+ e.nodeName.toLowerCase()+ " Html Element");
-				// 							console.log(e);
-				// 						}
-								
-				// 				 }//End of Value
-				// 			}else{
-				// 				console.warn("Make sure you have :" + $impleEvent.init.$dataError + " attribute to handle given return" + $return )
-				// 			}//end of key
-
-				// 	//}
-				// };//ENDOFDatafeedcheck
-					//-------------------------------------------------------------------------------------	
-		});//ENDOFFOREACHLOOp
-
-	};
+	// };
+	// $impleEvent.error=function(el,$return){
+	// 	return $impleEvent.manageReturns(el,$return);
+	// };
 	//------------------------------------------------------------------------------------------
 	//Return {} with key and value, where key is name or data-get, and value is value="" or el.value
 	$impleEvent.getData=getData;
@@ -210,7 +69,7 @@ import {core} from './core.js';
 	//this function is called by $impleEvent.getData(); which passes e, name, value to this function
 	//only applicable to user input not applicable to getAttribute("value");
 	$impleEvent.validate=function(e,name, value){//e=event, name=name attribute value e.g name, email
-			var validate=e.getAttribute('data-validate');
+			let validate=e.getAttribute('data-validate');
 				if($impleEvent.callbacks[validate]){
 					return $impleEvent.callbacks[validate](e,name,value);
 				}
@@ -219,12 +78,14 @@ import {core} from './core.js';
 	//--------------------------------------------------------------------
 //End of Helper Methods
 
-
+ $impleEvent.initiate=null;
 
 //User accessors: User mostly user these method to interaction with application 
 
 //It allow user to add callbacks, $impleEvent.add('methodname', function(){}).add({method1:function(){}, method2:function(){}})
+	
 	$impleEvent.add=function(a,b){
+		
 
 			if(Object.prototype.toString.call(a) === '[object Object]'){
 				//its object patter={name:callabck}
@@ -243,8 +104,22 @@ import {core} from './core.js';
 				console.error("Invalid argument supplied to add("+a+", "+b+") : Supply method name and callback");
 			}
 
+			// //Initialize query and event attachment
+			if(!this.initiate){
+			this.launch();
+
+			this.initiate=true;
+			}
+
 			return this;
 	};
+
+	$impleEvent.register=function(a,b){
+		return this.add(a,b);
+	};
+
+
+
 	//------------------------------------------------------------------------------------------
 	
 	//This will update $impleEvent or refresh $impleEvent on specified element.
@@ -315,5 +190,9 @@ import {core} from './core.js';
 		}
 	}else{
 		window.$impleEvent=$impleEvent;
+
+			// window.addEventListener("load", function(event) {
+   //  			window.$impleEvent.launch();
+  	// 		});
 	}
 

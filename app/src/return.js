@@ -14,6 +14,8 @@ if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeNam
 									if(e.hasAttribute($impleEvent.init.$dataAppend)){
 										//need to be append
 												e.appendChild(document.createTextNode($return))
+
+												
 										}else{
 											//clear contaner and put string/number
 											e.innerHTML="";
@@ -29,7 +31,9 @@ if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeNam
 											//replace the container with new content
 											e.innerHTML="";
 											e.appendChild($impleEvent.render.cloneElement($return));
+
 										}
+										$impleEvent.update(e);
 								}
 							
 						 				
@@ -86,7 +90,7 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 													if(result[feed[j]]){
 														result=result[feed[j]];
 													}else{
-														console.info("Cannot find:" + key + " in  the return " +JSON.stringify($return));
+														console.error("Cannot find:" + key + " in  the return " +JSON.stringify($return));
 														break;
 													}
 													
@@ -120,6 +124,8 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 																e.innerHTML="";
 																e.appendChild($impleEvent.render.cloneElement(value));
 															}
+
+															$impleEvent.update(e);
 												}
 											
 										}else{
@@ -158,19 +164,19 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 //case -3: Array//data-component holds query selector e.g #li 
 if(Object.prototype.toString.call($return) === '[object Array]'){
 	//if element has component as temlate
-		if(el.hasAttribute('data-component')){
-			if(el.getAttribute('data-component')){
-			var component=document.querySelector(el.getAttribute('data-component'));
-			if(component.nodeName){
-				if(!el.hasAttribute($impleEvent.init.$dataAppend)){
-					el.innerHTML="";
+	if(el.querySelector('['+$impleEvent.init.$dataComponent+']')){
+		let e=el.querySelector('['+$impleEvent.init.$dataComponent+']');
+			let templateElement=document.querySelector(e.getAttribute('data-component'));
+			if(templateElement.nodeName){
+				if(!e.hasAttribute($impleEvent.init.$dataAppend)){
+					e.innerHTML="";
 				}
-				
-				//foreach item in data
-				//---------------------------------------------------------------
+
+				//Loop for each item in array
+
 				for(var i=0; i<$return.length;i++){
-					var cloneComponent=$impleEvent.render.cloneElement(component);
-					el.appendChild(cloneComponent);
+					var cloneComponent=$impleEvent.render.cloneElement(templateElement);
+					e.appendChild(cloneComponent);
 					//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
 					if(!cloneComponent.childElementCount){
 						//--------------------------------------------------
@@ -198,24 +204,78 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 					}else{
 						$impleEvent.manageReturns(cloneComponent,$return[i]);
 					}
-					
-				}
-				//------------------------------------------------------------
 
-				//Finally update for any event attached to newlly updated DOM
-				$impleEvent.update(el);
+					$impleEvent.update(e);
+				}//END of for loop
+
 
 			}else{
-				console.log("Couldn't find element with querySelector :"+el.getAttribute('data-component'));
+				console.log('Unable to find Element for Templating from querySelctor:' + e.getAttribute('data-component'))
+			}//EOIF-template
+		}else{
+			//incase data-component is not aviable in parent scope
+			console.error("Array returns need [data-component] holder: No such holder found ");
+		}//ENDOFDATA_COMPONENT
+	}//ENDOF-Object-type-Array
 
-			}
-		}//EOGETCOMPONENT
+	// 	if(el.hasAttribute('data-component')){
+	// 		if(el.getAttribute('data-component')){
+	// 		var component=document.querySelector(el.getAttribute('data-component'));
+	// 		if(component.nodeName){
+	// 			if(!el.hasAttribute($impleEvent.init.$dataAppend)){
+	// 				el.innerHTML="";
+	// 			}
+				
+	// 			//foreach item in data
+	// 			//---------------------------------------------------------------
+	// 			for(var i=0; i<$return.length;i++){
+	// 				var cloneComponent=$impleEvent.render.cloneElement(component);
+	// 				el.appendChild(cloneComponent);
+	// 				//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
+	// 				if(!cloneComponent.childElementCount){
+	// 					//--------------------------------------------------
+	// 					if(typeof $return[i] === 'string' || typeof $return[i] === 'number' || $return[i].nodeName ){
+	// 					if(cloneComponent.hasAttribute($impleEvent.init.$dataFeed)){ return false};
+	// 							if(!$return[i].nodeName){
+	// 								if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
+	// 											cloneComponent.appendChild(document.createTextNode($return[i]))
+	// 										}else{
+	// 											cloneComponent.innerHTML="";
+	// 											cloneComponent.appendChild(document.createTextNode($return[i]));
+	// 										}
+	// 							}else{
+	// 								//consolcloneComponent.log($return[i]);
+	// 								if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
+	// 											cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
+	// 										}else{
+	// 											cloneComponent.innerHTML="";
+	// 											cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
+	// 										}
+	// 							}	
+	// 						}
+						
+	// 					//-----------------------------------------------------
+	// 				}else{
+	// 					$impleEvent.manageReturns(cloneComponent,$return[i]);
+	// 				}
+					
+	// 			}
+	// 			//------------------------------------------------------------
+
+	// 			//Finally update for any event attached to newlly updated DOM
+	// 			$impleEvent.update(el);
+
+	// 		}else{
+	// 			console.log("Couldn't find element with querySelector :"+el.getAttribute('data-component'));
+
+	// 		}
+	// 	}//EOGETCOMPONENT
 		
-	}else{//EOHASCOmPOMENT
-		console.error("Couldn't able to hancle Array, with out component");
-	}
+	// }else{//EOHASCOmPOMENT
+	// 	console.error("Couldn't able to handle Array, with out component");
+	// }
 
-	}//ENDIFArray
+	// }//ENDIFArray
 
 
 }//EOmanageRETURNS

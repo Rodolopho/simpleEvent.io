@@ -6,7 +6,9 @@ export var  render={
 			//return clone or clone new element every time its called
 			return this.obj2Html(this.html2Obj(el,{},1));
 		},
-		
+		// html2ObjInnerHtml:function(){
+
+		// },
 		html2Obj:function(el,obj,i){
 
 				obj[i]={};
@@ -16,10 +18,13 @@ export var  render={
 						obj[i].isText=true;
 						obj[i].text=el.nodeValue;
 					}
+				}else if(el.nodeType==8){
+					//ignore comments
 				}else{
 
 					obj[i].tagName=el.nodeName.toLowerCase();
 					obj[i].attributes={};
+					//console.log(el);
 					for(var j=0;j<el.attributes.length;j++){
 						el.attributes.length
 						//console.log(j);
@@ -90,8 +95,5 @@ export var  render={
 		 		$impleEvent.update(ele);
 		 	});
 		 	
-		},
-		
-		
-		
+		},	
 	};

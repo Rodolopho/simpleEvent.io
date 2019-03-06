@@ -85,7 +85,11 @@ export default function getData(el,bool){
 					if(e.getAttribute('data-validate')){
 						var validate=e.getAttribute('data-validate');
 						if($impleEvent.callbacks.hasOwnProperty(validate)){
-							if(!$impleEvent.callbacks[validate].call(e,key,value)){
+							var isValid=$impleEvent.callbacks[validate].call(e,key,value);
+							if(Array.isArray(isValid)){
+									result.validate=[];
+							}
+							if(isValid===false){
 								result.hasError=true;
 							}
 

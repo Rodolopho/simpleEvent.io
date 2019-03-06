@@ -8,12 +8,14 @@ export  var init={
 			$dataFeed:"data-feed",//data-return aslo sounds great
 			//gets data with key and value, data-get="name" value="my name"
 			$dataGet:"data-get",//
+			$dataComponent:'data-component',
+			$dataSet:'data-set',
 			$dataAppend:"data-append",//APPENDS or replace 
-			$dataError:"data-error",//for error
-			$dataMessage:"data-message",
-			$dataNotification:'data-notification', 
+			// $dataError:"data-error",//for error
+			// $dataMessage:"data-message",
+			// $dataNotification:'data-notification', 
 		//APPLICATION
-			$notification:null,
+			// $notification:null,
 			//return { returnTo:{el:document.getElementById('h1')}, data:{name:"myname"}}
 			$returnTo:"el",//define your outer scope element holder
 			$root:document,//by default

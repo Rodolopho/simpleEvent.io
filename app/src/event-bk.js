@@ -4,111 +4,31 @@ export default function eventManager(el,eventList){
 //function eventManager(el,eventList){
 	//event list is the list of events like [click_somefunc,dbl_someOtherfunc]
 	//for each events in eventList
-
 		for(var i=0; i<eventList.length;i++){
-
-			if(!eventList[i].trim()) return false;
-			//wraping in self invoking function to solve event async issue
-			(function(){
 				var data=eventList[i].split($impleEvent.init.$seperator);
 				//check event data has atleast eventname and callback
 					if(data.length<2){
-						console.warn("Insufficient Agruments: Must provided atleast eventname and callback  or event attribute format is not understood:used seperator is "+$impleEvent.init.$seperator);
+						console.warn("Insufficient Agruments: Must provided atleast eventname and callback name or event attribute format is not understood:used seperator is "+$impleEvent.init.$seperator);
 						return false;
 					}
-
-					var callback=null;
-
-				//-----------custon event 'call'-----------------------------//
-					if(data[0]=='call'){
-						window.addEventListener("load", function(e) {
-    						
-  							
-						if($impleEvent.core.hasOwnProperty(data[1])){
-								 callback=$impleEvent.core[data[1]];
-				  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
-				  				callback=$impleEvent.callbacks[data[1]];
-				  			}else{
-				  				console.error("Can't Found Method:"+data[1]+" ,Please Register event handler using '$impleEvent.add()' method?");
-								return false;
-				  			}
-
-
-				  			//adding current event to args so that callback can acess it.
-									var args=data.slice(2);
-									args.unshift(e);
-									 //caputure any return from callback to feed return feeder
-										var $return=callback.apply(el,args);//give callback this scope of addEventListener i.e target element
-											if($return){
-												 
-												 // --------------------data-filter-------------------
-													if(el.hasAttribute('data-filter')){
-													var filter=el.getAttribute('data-filter');
-
-													if($impleEvent.core.hasOwnProperty(filter)){
-														$return=$impleEvent.core[filter].call(el,$return);
-
-													}else if($impleEvent.callbacks.hasOwnProperty(filter)){
-														$return=$impleEvent.callbacks[filter].call(el,$return);
-													}else{
-														console.error("Unable to apply filter" +filter +": Missing filter method");
-													}
-
-													if(!$return){
-														console.error("Error in data-filter:Must return value with valid data type; check return from '"+filter+ "' method");
-														return false;
-													}					
-												}//ENDIfDATAFILTER
-											//--------------------------------------------------
-												
-											
-											//hand over deployment task to return handler
-											$impleEvent.manageReturns(el.parentNode,$return);
-											// if(Array.isArray($return)){
-											// 	$impleEvent.manageReturns(el,$return);
-											// }else{
-											// 	$impleEvent.manageReturns(el.parentNode,$return);
-											// }
-
-											//if(el.hasAttribute("data-after-return"))
-											//after return is handled
-												}
-
-											if(el.hasAttribute('data-set')){
-												var arry=$impleEvent.getData(el,true);
-												if(Array.isArray(arry)){
-													Array.prototype.forEach.call(document.querySelectorAll(el.getAttribute("data-set")),function(e){
-														e.setAttribute('data-get', arry[0]);
-														e.setAttribute('value', arry[1]);
-													});
-												}
-											}
-										});//end of window load event		
-
-					}//ENDOF-DATA==call
-
 				// --------------------------------------Interval and Time out--------------//
 					if(data[0].match(/timeout|interval/)){
 						//handle set interval and Timeout
 				  		//e.g event="timeout_callback_t_arg2_arg3"//time will be agr1
 				  		if(data.length>=3 && isFinite(data[2])){
+				  			var callback=null;
+				  			if($impleEvent.core.hasOwnProperty(data[1])){
+				  				callback=$impleEvent.core[data[1]];
+				  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
+				  				callback=$impleEvent.callbacks[data[1]];
+
+				  			}else{
+				  				console.error("Can't Found Method:"+data[1]+" ,Please Register event handler using '$impleEvent.add()' method?");
+								return false;
+				  			}
 
 				  			if(data[0]=="interval"){
 				  				var interval=setInterval(function(){
-				  					//Check if has a valid callback
-				  					//It check every time bad for performance..but still
-				  					
-							  			if($impleEvent.core.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.core[data[1]];
-							  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.callbacks[data[1]];
-
-							  			}else{
-							  				console.error("Can't Found Method:"+data[1]+" ,Please Register event handler using '$impleEvent.add()' method?");
-							  				clearInterval(interval);
-											return false;
-							  			}
-
 									//adding current event to args so that callback can acess it.
 									var args=data.slice(2);
 									args.unshift(interval);
@@ -138,12 +58,7 @@ export default function eventManager(el,eventList){
 												
 											
 											//hand over deployment task to return handler
-											$impleEvent.manageReturns(el.parentNode,$return);
-											// if(Array.isArray($return)){
-											// 	$impleEvent.manageReturns(el,$return);
-											// }else{
-											// 	$impleEvent.manageReturns(el.parentNode,$return);
-											// }
+											$impleEvent.manageReturns(el,$return);
 
 											//if(el.hasAttribute("data-after-return"))
 											//after return is handled
@@ -167,25 +82,12 @@ export default function eventManager(el,eventList){
 
 				  			}else {//timeout
 				  				var timeout=setTimeout(function(){
-				  					//Check if has a valid callback
-				  					//It check every time bad for performance..but still
-				  					//var callback=null;
-							  			if($impleEvent.core.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.core[data[1]];
-							  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.callbacks[data[1]];
-
-							  			}else{
-							  				console.error("Can't Found Method:"+data[1]+" ,Please Register event handler using '$impleEvent.add()' method?");
-							  				clearTimeout(interval);
-											return false;
-							  			}
 									//adding current event to args so that callback can acess it.
 									var args=data.slice(2);
 									args.unshift(timeout);
 									 //caputure any return from callback to feed return feeder
 										var $return=callback.apply(el,args);//give callback this scope of addEventListener i.e target element
-											if($return || $return==''){
+											if($return){
 												 // --------------------data-filter-------------------
 													if(el.hasAttribute('data-filter')){
 													var filter=el.getAttribute('data-filter');
@@ -199,7 +101,7 @@ export default function eventManager(el,eventList){
 														console.error("Unable to apply filter" +filter +": Missing filter method");
 													}
 
-													if(!$return||$return==''){
+													if(!$return){
 														console.error("Error in data-filter:Must return value with valid data type; check return from '"+filter+ "' method");
 														return false;
 													}					
@@ -208,15 +110,11 @@ export default function eventManager(el,eventList){
 												
 											
 											//hand over deployment task to return handler
-											$impleEvent.manageReturns(el.parentNode,$return);
-											// if(Array.isArray($return)){
-											// 	$impleEvent.manageReturns(el,$return);
-											// }else{
-											// 	$impleEvent.manageReturns(el.parentNode,$return);
-											// }
+											$impleEvent.manageReturns(el,$return);
+
 											//if(el.hasAttribute("data-after-return"))
 											//after return is handled
-											}//end if return
+												}//end if return
 
 
 
@@ -246,54 +144,36 @@ export default function eventManager(el,eventList){
 					//-----------procced to normal events
 					}else{
 
-						// //var callback=null;
-				  // 			if($impleEvent.core.hasOwnProperty(data[1])){
-				  // 				callback=$impleEvent.core[data[1]];
-				  // 			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
-				  // 				callback=$impleEvent.callbacks[data[1]];
+						var callback=null;
+				  			if($impleEvent.core.hasOwnProperty(data[1])){
+				  				callback=$impleEvent.core[data[1]];
+				  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
+				  				callback=$impleEvent.callbacks[data[1]];
 
-				  // 			}else{
-				  // 				console.error("Can't Found Method:"+ data[1] +" ,Please Register event handler using '$impleEvent.add()' method?");
-						// 		return false;
-				  // 			}
-				  			//console.log(data[0]);
+				  			}else{
+				  				console.error("Can't Found Method:"+ data[1] +" ,Please Register event handler using '$impleEvent.add()' method?");
+								return false;
+				  			}
+
 				  			// Attach Event Listener 
-				  			
 				  			el.addEventListener(data[0],function f(e){
-				  				//store callback reference so that we can detach liste
+				  				//store callback reference so that we can detach listener
 					  				e.removeEventListener=function(){
 					  					el.removeEventListener(this.type, f);
 					  				};
-
-					  				//Check if callback isvalid 
-					  				// var callback=null;
-							  			if($impleEvent.core.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.core[data[1]];
-							  			}else if($impleEvent.callbacks.hasOwnProperty(data[1])){
-							  				callback=$impleEvent.callbacks[data[1]];
-
-							  			}else{
-							  				console.error("Can't Found Method:"+ data[1] +" ,Please Register event handler using '$impleEvent.add()' method?");
-											e.removeEventListener();
-											return false;
-							  			}
 
 				  				//check and handle for dynamic arguments e.g event="click_callback_$name"
 				  				// it will always update its value with data-get function
 					  				var mapArgs=data.map(function(arg){
 					  						//check for "$" variable identifier
 											if(arg.match(/^\$[a-zA-Z0-9]+/)){
-												//check if element has data-get attribute and has a viable
+												//check if element has data-get attribute and has arv viable
 												if(el.getAttribute($impleEvent.init.$dataGet)===arg.replace(/^\$/,"")){
 														return el.value?el.value:el.getAttribute("value");
 												}else if(el.getAttribute("name")===arg.replace(/^\$/,"")){
 													return el.value?el.value:el.getAttribute("value");
-												}else if(el.getAttribute(arg.replace(/^\$/,""))){
-													return el.getAttribute(arg.replace(/^\$/,""));
-												}else{
-													return arg;
 												}
-												
+												return arg;
 											}
 											//return as it is
 												return arg;
@@ -345,13 +225,7 @@ export default function eventManager(el,eventList){
 												
 											
 											//hand over deployment task to return handler
-											$impleEvent.manageReturns(el.parentNode,$return);
-											// if(Array.isArray($return)){
-											// 	$impleEvent.manageReturns(el,$return);
-											// }else{
-											// 	$impleEvent.manageReturns(el.parentNode,$return);
-											// }
-											
+											$impleEvent.manageReturns(el,$return);
 
 											//if(el.hasAttribute("data-after-return"))
 											//after return is handled
@@ -372,12 +246,7 @@ export default function eventManager(el,eventList){
 				  			},//EndOFAddEventHandler
 				  			false);
 
-
-
-
-
 				  }//eoelse	
-			})();	  
 		};//eo for loop
 
 }//EOMAIN		
