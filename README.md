@@ -1,15 +1,15 @@
-# $imple Event: Javascript framework for Event Management
+## $imple Event: Javascript framework for Event Management
 ## $impleEvent is simple javascript Event Management framework(EMF) for  event management in browser. It has a single object "$impleEvent" through which it proccesses every functionality.
-###There are two main area in Simple Event:
-####1) You provide event attibute to your html element, where you can define event-type, callback for handling event, optional arguments which all are seperate by '\_' for eg.
+### There are two main area in Simple Event:
+#### 1) You provide event attibute to your html element, where you can define event-type, callback for handling event, optional arguments which all are seperate by '\_' for eg.
 ```html
-<button event="click_openModal_id>Open Modal</button>
+<button event="click_openModal_id">Open Modal</button>
 
 <button event="click_closeModal_id">close</button>
 ```
 ###### Here you proving a callback function "openModal and closeModal" for event type "click" on above element.You can provide muliple events just seperating it with space.ie <button event="click_showForm dblclick_fillForm">Test</button>
 
-####2)Once you declare event attribute with atleast event type and callback function, second thing you do is register callback using $impleEvent.register(); or $impleEvent.add(); method. 
+#### 2) Once you declare event attribute with atleast event type and callback function, second thing you do is register callback using $impleEvent.register(); or $impleEvent.add(); method. 
 
 ```javascript
     $impleEvent.add("openModal",function(e,arg1){
@@ -24,7 +24,7 @@
 
         });
 ```
-#Return and Capaturing Return 
+## Return and Capaturing Return 
 ### Whenever the eventhandler  return value other then  function, you can capuring them  and embed in your HTML document.
 For Example:
 Lets suppose you have a Subscribe field .
@@ -74,7 +74,7 @@ You can caputure the return inside a element with "return" class name. Return mu
 
 When you just return data from your callback it search for a element with class name "return" in by queryselector form its parentElement of your current event target element to embed your return. You should alway use empty element with class name "return " as  a place holder for return element to embed, however you can also append the return data if you desire to so by adding 'data-append' attribute on the placeholder element .
 
-###Return String, Number and HTML;
+### Return String, Number and HTML;
 ##### You can return string , number or HTML simply returning it from callback function.
 Note:There is $imple.createElement(TagName,{//attribute}) helper function to create element, as show in example below.
 ```html
@@ -112,7 +112,7 @@ $impleEvent.add('addTask',function(e){
 });
 ```
 ### Returning Dynamic content using object and Array
-####Returning object i.e {}
+#### Returning object i.e {}
 With the help of data-feed attribute we can emebed content dynamically.
 For Example:-
 ```html
@@ -148,7 +148,7 @@ Note:Whenever your returns cpntains html element , it will update and attach a e
 The 'data-feed' , attribute will hold the key of the object which value should be embeded in return holder, the holder most conatin 'return' class name regardless of  wheather 'data-feed' attribute is provide or not.
 The when return is not an object, the return holder will not affected by static return if the holder has 'data-feed' attribute; 
 
-###Returning Array 
+### Returning Array 
 ##### Handling array data type is little bit tricky.
 The Holder for array returns are diffrent from normal holder, the holder should contain 'data-component' attribute and set to selector which will be used as template. The template element should follow general holder requirement such classname "return" and attribute "data-feed". For example:-
 ```html
@@ -171,10 +171,10 @@ Whenever array is returned from callback, it will first check for element with  
 Each item of array can hold data type of string, Number, HTML or Object but array.
 
 
-###Scope of returns
+### Scope of returns
 ##### By default scope of return to embed is limites to parent scope, that means it only looks for hoder from one level up in DOM Tree. i.e parentNode of element where event will occurs. But you can change scope to global or specific element. Note: No matter where once scope is specified, it will take  each and every child elements under its scope coverage in DOM Tree.
 
-####Global scope
+#### Global scope
 You can change scope from root in DOM by 'global' key.
 
 ```javascript
@@ -189,7 +189,7 @@ $impleEvent.add('returnData',function(e){
 
 ```
 
-####Returing to specific element
+#### Returing to specific element
 Similarly, by using 'returnTo' key you can change return capture scope to specific element.
 
 $impleEvent.add('returnData',function(e){
@@ -207,7 +207,7 @@ $impleEvent.add('returnData',function(e){
 
 
 ### interval and timeout event
-####Apart from regular event, you can use setTimeout and setInterval as regular event, using timeout and interval respectively  in event attribute. For Example
+#### Apart from regular event, you can use setTimeout and setInterval as regular event, using timeout and interval respectively  in event attribute. For Example
 ```html
 <div class="Time float-right">
     <h2 event="interval_updateTime_100" class="return show-time">00:00:00</h2>

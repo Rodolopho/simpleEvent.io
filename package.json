@@ -1,7 +1,7 @@
 {
-  "name": "simpleevent",
+  "name": "$simpleevent",
   "version": "1.0.0",
-  "description": "A Javascript Framework for event management",
+  "description": "$impleEvent:A Javascript Framework for event management",
   "main": "app.js",
   "directories": {
     "test": "test"
@@ -18,7 +18,7 @@
     "url": "git+https://github.com/Rodolopho/simple-event.git"
   },
   "keywords": [
-    "simple evnet",
+    "simple event",
     "event",
     "$imple event",
     "event",
