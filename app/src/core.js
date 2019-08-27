@@ -18,6 +18,22 @@ export var core={
 		// 		this.parentNode.style.display="none";
 
 	},
+	log:function(e,a){
+		console.log(a);
+	},
+	logEvent:function(e){
+		console.log(e.type,"\n",e);
+	},
+	logFunc:function(ev,f,a,b,c,d,e){
+		f=f.trim();
+		if($impleEvent.callbacks.hasOwnProperty(f)){
+			console.log($impleEvent.callbacks[f](ev,a,b,c,d,e));
+		}else if(core.hasOwnProperty(f)){
+			console.log(core[f](ev,a,b,c,d,e));
+		}
+		
+		
+	},
 	animate:function(e,a,b){
 		//Require animate.css
 		// https://daneden.github.io/'animate.css' for animate to work
@@ -33,14 +49,14 @@ export var core={
 	//----------------------------core-------
 	dataChanger:function(e,a,b){
 
-		if(this.hasAttribute("data-get")){
+		if(this.hasAttribute($impleEvent.init.$dataGet)){
 			if(!$impleEvent.form){
 				var form=$impleEvent.createElement("div", {
 				style:"padding:5px;border:1px solid #ccc;background:#ccc;border-radius:5px;postion:absolute;z-index:12345678998654;"
 				});
 					var label=$impleEvent.createElement("label",{style:"font-weight:bold;margin:0px 5px;background:#ccc",});
 					var input=$impleEvent.createElement("input",{style:"outline:none; border:none;border-bottom:1px solid #eee;"});
-					label.innerText=this.getAttribute("data-get");
+					label.innerText=this.getAttribute($impleEvent.init.$dataGet);
 					input.value=this.getAttribute("value");
 
 					form.appendChild(label);
@@ -60,7 +76,7 @@ export var core={
 			};
 						 //$impleEvent.form;
 			 this.style.position="relative";
-			 $impleEvent.form.label.innerText=this.getAttribute("data-get");
+			 $impleEvent.form.label.innerText=this.getAttribute($impleEvent.init.$dataGet);
 					$impleEvent.form.input.value=this.getAttribute("value");
 			this.appendChild($impleEvent.form.form);
 			$impleEvent.form.input.onchange=function(){
@@ -165,8 +181,12 @@ export var core={
 		}
 
 	},
-	return:function(e,a){
+	return:function(e,a,b){
+		if(isFinite(e)){
+			//a is time
+			a=b;
 
+		}
 		if(a){
 			return a.replace(/\/s/g," ").trim();
 		}else{
@@ -176,7 +196,15 @@ export var core={
 		}
 
 	},
-	returnTo:function(e,id,a){
+	returnTo:function(e,id,a,b){
+		
+		if(isFinite(e)){
+			//a is time
+			id=a;
+			a=b;
+			e={type:"interval/timeout"};
+
+		}
 		if( a && document.getElementById(id)){
 			a=a.replace(/\/s/g," ").trim();
 			return {

@@ -5,25 +5,25 @@ import eventManager from "./eventbeta.js";
 import callbackHandler from "./callback.js";
 import  manageReturns from "./return.js";
 import  getData from "./retrive.js";
-import  setData from "./assign.js";
 import {core} from './core.js';
-import dataStore from "./store.js";
-// import Datastore from './dataStore.js';
-//------------------------------------------------------------------------------------------
-	const $impleEvent={};
-//Container or holders
-	//conatiner to hold callback or event handlers supplied by user using $impleEvent.add(), method
-	$impleEvent.callbacks={};
-	//$imple Event native Collection of callbacks
-	$impleEvent.inCallbacks={};
-	//$imple Event native Collection of callbacks
-	$impleEvent.core=core;
-	//Application initilization and config data, can be modified using $impleEvent.config(), method
-	$impleEvent.init=init;
-	//$imple EVent Variables 
-	$impleEvent.vars={};
-	//DATA-FEED RESET OR RETURN RESET
-	$impleEvent.reset=function(ele,bool){
+
+
+
+export defautl class $impleEvent{
+	constructor(){
+		this.callbacks={};
+		this.core=core;
+		this.init=init;
+		this.inCallbacks={};
+		//this.vars={};
+		
+	}
+
+	toString(){
+		return "Object $impleEvent";
+	}
+
+	reset(ele,bool){
 		let el=ele.parentNode;
 		if(el.nodeType){
 			if(bool===true){
@@ -34,38 +34,40 @@ import dataStore from "./store.js";
 			
 		}
 	};
-	//to string identifier
-	$impleEvent.toString=function(){return "Object $impleEvent";};
-//------------------------------------------------------------------------------------------
-//Helper Methods
-	$impleEvent.method=function(callback){
-				var data=callback.split(/\./);
-							if(data.length===2){
-								if(this.inCallbacks.hasOwnProperty(data[0])){
-									if(this.inCallbacks[data[0]].hasOwnProperty(data[1])){
-										return this.inCallbacks[data[0]][data[1]];
-									}else{
-										console.error("Can't Found Method:"+data[1]+"in "+ data[0]+"Object : ref->"+callback+" ,Please Register event handler using '$impleEvent.addIn("+data[0]+", ....)' method?");
-													return false;
-									}
 
-								}else{
-									console.error("Can't Found Object:'" +data[0]+ "' in '"+ callback+"' ,For '.' notation, use  '$impleEvent.addIn()' method?");
-									return false;
-									}
-								
 
-						// ------------------End for dot notaion
-							} else if(this.core.hasOwnProperty(callback)){
-								 return this.core[callback];
-				  			}else if(this.callbacks.hasOwnProperty(callback)){
-				  				return  this.callbacks[callback];
-				  			}else{
-				  				console.error("Can't Found Method:"+callback+" ,Please Register event handler using '$impleEvent.add()' method?");
+
+}
+
+method(callback){
+	let data=callback.split(/\./);
+		if(data.length===2){
+			if(this.inCallbacks.hasOwnProperty(data[0])){
+				if(this.inCallbacks[data[0]].hasOwnProperty(data[1])){
+					return this.inCallbacks[data[0]][data[1]];
+				}else{
+					console.error("Can't Found Method:"+data[1]+"in "+ data[0]+"Object : ref->"+callback+" ,Please Register event handler using '$impleEvent.addIn("+data[0]+", ....)' method?");
 								return false;
-				  			}
-	};
-	$impleEvent.addIn=function(name,a,b){
+				}
+
+			}else{
+				console.error("Can't Found Object:'" +data[0]+ "' in '"+ callback+"' ,For '.' notation, use  '$impleEvent.addIn()' method?");
+				return false;
+				}
+			
+
+	// ------------------End for dot notaion
+		} else if(this.core.hasOwnProperty(callback)){
+			 return this.core[callback];
+			}else if(this.callbacks.hasOwnProperty(callback)){
+				return  this.callbacks[callback];
+			}else{
+				console.error("Can't Found Method:"+callback+" ,Please Register event handler using '$impleEvent.add()' method?");
+			return false;
+			}
+	}
+
+	addIn(name,a,b){
 		let _thisCallbacks=null;
 		if(this.inCallbacks.hasOwnProperty(name)){
 			_thisCallbacks=this.inCallbacks[name];
@@ -101,7 +103,7 @@ import dataStore from "./store.js";
 			return this;
 	
 
-	};
+	}
 
 	
 	//Covert html string in html.
@@ -142,10 +144,6 @@ import dataStore from "./store.js";
 	//------------------------------------------------------------------------------------------
 	//Return {} with key and value, where key is name or data-get, and value is value="" or el.value
 	$impleEvent.getData=getData;
-	$impleEvent.setData=setData;
-	// $impleEvent.getDataStore=getDataStore;
-	// $impleEvent.setDataStore=setDataStore;
-	$impleEvent.dataStore=dataStore;
 	
 	//Validation  check and reference check to callback provide by user 
 	//this function is called by $impleEvent.getData(); which passes e, name, value to this function
@@ -253,36 +251,11 @@ import dataStore from "./store.js";
 	$impleEvent.launch=function(el){
 		//find the elements with event attribute and attach a handler and listener
 			var element=el || this.init.$root;
-			// console.log(element);
-			//if el has any event 
-			//----------------			---------------------------------
-			 if(element!=document && element.getAttribute('event')){
-			 	
-			 	let eventAttribute=element.getAttribute('event');
-				
-				if(eventAttribute.trim()){
-					if(this.init.$useArrow===true){
-						let remains=eventAttribute.replace($impleEvent.init.$seperatorArrowGlobal,"");
-
-						if(remains.replace(/,/g,"").trim()){
-							console.error("Invalid syntax defination:'"+remains,element);
-							console.warn(" Must provided atleast eventname and callback  in arrow function format 'event=>callback(,arg1,ar2)' seperated by ',' for multiple entry" );
-						}
-			
-						this.eventManager(element, eventAttribute.match(this.init.$seperatorArrowGlobal));
-					}else{
-						this.eventManager(element,eventAttribute.split(/\s+/));
-					}
-					
-					
-				}
-			 }//end of self or root el event mangement
-			 //---------------------------------------------------------
 			var elements=element.querySelectorAll('[event]');
 			
 			 for(var i=0; i<elements.length; i++){
 			 	
-				let eventAttribute=elements[i].getAttribute('event');
+				var eventAttribute=elements[i].getAttribute('event');
 				
 				if(eventAttribute.trim()){
 					if(this.init.$useArrow===true){

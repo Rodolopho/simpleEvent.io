@@ -23,17 +23,19 @@ if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeNam
 										}
 								}else{
 									//ITs HTML ELement
+									//every time return new element after cloning
+									let html=$impleEvent.render.cloneElement($return);
 									if(e.hasAttribute($impleEvent.init.$dataAppend)){
 										//append
 											//clone element otherwise cant apped to muliple places
-												e.appendChild($impleEvent.render.cloneElement($return));
+												e.appendChild(html);
 										}else{
 											//replace the container with new content
 											e.innerHTML="";
-											e.appendChild($impleEvent.render.cloneElement($return));
+											e.appendChild(html);
 
 										}
-										$impleEvent.update(e);
+										$impleEvent.update(html);
 								}
 							
 						 				
@@ -118,14 +120,16 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 															}
 												}else{
 													//console.log(value);
+													//
+													let html=$impleEvent.render.cloneElement(value);
 													if(e.hasAttribute($impleEvent.init.$dataAppend)){
-																e.appendChild($impleEvent.render.cloneElement(value));
+																e.appendChild(html);
 															}else{
 																e.innerHTML="";
-																e.appendChild($impleEvent.render.cloneElement(value));
+																e.appendChild(html);
 															}
 
-															$impleEvent.update(e);
+															$impleEvent.update(html);
 												}
 											
 										}else{
@@ -161,13 +165,13 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 
 }//EOOBJECTCASE2
 //-------------------------------------------------------------------------------------	
-//case -3: Array//data-component holds query selector e.g #li 
+//case -3: Array//$impleEvent.init.$dataComponent holds query selector e.g #li 
 if(Object.prototype.toString.call($return) === '[object Array]'){
 	//if element has component as temlate
 	if(el.querySelector('['+$impleEvent.init.$dataComponent+']')){
 		let e=el.querySelector('['+$impleEvent.init.$dataComponent+']');
-			let templateElement=document.querySelector(e.getAttribute('data-component'));
-			if(templateElement.nodeName){
+			let templateElement=document.querySelector(e.getAttribute($impleEvent.init.$dataComponent));
+			if(templateElement && templateElement.nodeName){
 				if(!e.hasAttribute($impleEvent.init.$dataAppend)){
 					e.innerHTML="";
 				}
@@ -205,22 +209,22 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 						$impleEvent.manageReturns(cloneComponent,$return[i]);
 					}
 
-					$impleEvent.update(e);
+					$impleEvent.update(cloneComponent);
 				}//END of for loop
 
 
 			}else{
-				console.log('Unable to find Element for Templating from querySelctor:' + e.getAttribute('data-component'))
+				console.error('Unable to find Element for Templating from querySelector:' + e.getAttribute($impleEvent.init.$dataComponent))
 			}//EOIF-template
 		}else{
-			//incase data-component is not aviable in parent scope
-			console.error("Array returns need [data-component] holder: No such holder found ");
+			//incase $impleEvent.init.$dataComponent is not aviable in parent scope
+			console.error("Array returns need ["+$impleEvent.init.$dataComponent+"] holder: No such holder found ");
 		}//ENDOFDATA_COMPONENT
 	}//ENDOF-Object-type-Array
 
-	// 	if(el.hasAttribute('data-component')){
-	// 		if(el.getAttribute('data-component')){
-	// 		var component=document.querySelector(el.getAttribute('data-component'));
+	// 	if(el.hasAttribute('$impleEvent.init.$dataComponent')){
+	// 		if(el.getAttribute('$impleEvent.init.$dataComponent')){
+	// 		var component=document.querySelector(el.getAttribute('$impleEvent.init.$dataComponent'));
 	// 		if(component.nodeName){
 	// 			if(!el.hasAttribute($impleEvent.init.$dataAppend)){
 	// 				el.innerHTML="";
@@ -266,7 +270,7 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 	// 			$impleEvent.update(el);
 
 	// 		}else{
-	// 			console.log("Couldn't find element with querySelector :"+el.getAttribute('data-component'));
+	// 			console.log("Couldn't find element with querySelector :"+el.getAttribute('$impleEvent.init.$dataComponent'));
 
 	// 		}
 	// 	}//EOGETCOMPONENT

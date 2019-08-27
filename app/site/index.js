@@ -45,4 +45,4 @@ $impleEvent.add("update",function(e,a,b){
 	// 		data:[{name:"two"}, {name:"three"}, {name:"four"}]
 	// 	}
 	// }
-}).add("hhe",function(){alert()}).launch();
+}).add("hhe",function(){alert()});

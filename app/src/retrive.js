@@ -8,11 +8,18 @@ export default function getData(el,bool){
 			var key=el.hasAttribute("name")?el.getAttribute('name'):el.getAttribute($impleEvent.init.$dataGet);
 			
 			if(key){
-				var value=el.hasAttribute('value')?el.getAttribute('value'):el.value;
+				let value=null;
+				if(el.value || el.value===""){
+					value=el.value;
+				}else if(el.hasAttribute('value')){
+					value=el.getAttribute('value');
+
+				}
+				//var value=el.hasAttribute('value')?el.getAttribute('value'):el.value;
 				if(value==="" || value){
-				// --------------------data-filter-------------------
-							if(el.hasAttribute('data-filter')){
-							var filter=el.getAttribute('data-filter');
+				// -------------------$impleEvent.init.$dataFilter------------------
+							if(el.hasAttribute($impleEvent.init.$dataFilter)){
+							var filter=el.getAttribute($impleEvent.init.$dataFilter);
 
 								if($impleEvent.core.hasOwnProperty(filter)){
 									value=$impleEvent.core[filter].call(el,value);
@@ -24,7 +31,7 @@ export default function getData(el,bool){
 								}
 
 								if(!value){
-								console.error("Error in data-filter:Must return value with valid data type; check return from '"+filter+ "' method");
+								console.error("Error in "+$impleEvent.init.$dataFilter+": Must return value with valid data type; check return from '"+filter+ "' method");
 									return false;
 								}				
 							}//ENDIfDATAFILTER
@@ -34,15 +41,15 @@ export default function getData(el,bool){
 				//If Single data is asked a current element
 				if(bool==true) return [key, value];
 
-				if(el.getAttribute('data-validate')){
-					var validate=el.getAttribute('data-validate');
+				if(el.getAttribute($impleEvent.init.$dataValidate)){
+					var validate=el.getAttribute($impleEvent.init.$dataValidate);
 					if($impleEvent.callbacks.hasOwnProperty(validate)){
 						if(!$impleEvent.callbacks[validate].call(el,key,value)){
 							result.hasError=true;
 						}
 
 					}else{
-						console.log("Error in data-validate; unable to find callback :"+validate);
+						console.log("Error in " + $impleEvent.init.$dataValidate + " unable to find callback :"+validate);
 					}
 				}
 
@@ -60,11 +67,18 @@ export default function getData(el,bool){
 					var key=e.hasAttribute("name")?e.getAttribute('name'):e.getAttribute($impleEvent.init.$dataGet);
 				
 				if(key){
-					var value=e.hasAttribute('value')?e.getAttribute('value'):e.value;
+					let value=null;
+					if(e.value || e.value===""){
+						value=e.value;
+					}else if(e.hasAttribute('value')){
+						value=e.getAttribute('value');
+
+					}
+						//var value=e.hasAttribute('value')?e.getAttribute('value'):e.value;
 					if(value==="" || value){
-					// --------------------data-filter-------------------
-								if(e.hasAttribute('data-filter')){
-								var filter=e.getAttribute('data-filter');
+					// -------------------$impleEvent.init.$dataFilter------------------
+								if(e.hasAttribute($impleEvent.init.$dataFilter)){
+								var filter=e.getAttribute($impleEvent.init.$dataFilter);
 
 									if($impleEvent.core.hasOwnProperty(filter)){
 										value=$impleEvent.core[filter].call(e,value);
@@ -76,14 +90,14 @@ export default function getData(el,bool){
 									}
 
 									if(!value){
-									console.error("Error in data-filter:Must return value with valid data type; check return from '"+filter+ "' method");
+									console.error("Error in "+ $impleEvent.init.$dataFilter+" : Must return value with valid data type; check return from '"+filter+ "' method");
 										return false;
 									}				
 								}//ENDIfDATAFILTER
 									
 					}//ENDIFVALUE
-					if(e.getAttribute('data-validate')){
-						var validate=e.getAttribute('data-validate');
+					if(e.getAttribute($impleEvent.init.$dataValidate)){
+						var validate=e.getAttribute($impleEvent.init.$dataValidate);
 						if($impleEvent.callbacks.hasOwnProperty(validate)){
 							var isValid=$impleEvent.callbacks[validate].call(e,key,value);
 							if(Array.isArray(isValid)){
@@ -94,7 +108,7 @@ export default function getData(el,bool){
 							}
 
 						}else{
-							console.error("Error in data-validate; unable to find callback :"+validate);
+							console.error("Error in " +$impleEvent.init.$dataValidate+ " unable to find callback :"+validate);
 						}
 					}
 

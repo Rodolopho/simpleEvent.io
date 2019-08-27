@@ -4,7 +4,7 @@
 	<title>Simple event Devlopment</title>
 	<style>
 		.one{
-			color:red;
+			
 			background: olive;
 		}
 		.two{
@@ -12,8 +12,9 @@
 			display:block;
 		}
 	</style>
+
 </head>
-<body style="margin: 20px">
+<body style="margin: 20px" event="load=>alert(,'...loading')">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <!-- <script type="text/javascript" src="app/app.js"></script>
 <script type="text/javascript" src="app/dispatchReturnsAlpha.js"></script>
@@ -23,15 +24,38 @@
 <script type="text/javascript" src="app/dist/$impleEvent.js"></script>
 <!-- --------------------------------codeig are -->
 
-<button event="click_addClass_one_h1" class="one	">Click</button>
+<div id="ddd"class="">
+	<input event='interval=>increment(,500,$value,1)'>
+	<span class="return" data-feed="number"></span>
+	<p>Your Name is:<span class="return"></span>
 
-<h1 id="h1" class="two" event="click_scale_1.2">Hello world</h1>
+</div>
+</div>
+<button event="click=>logEvent" class="one	">Click</button>
+<button event="click=>hhh(,'fuck')" class="one return	">Click</button>
+
+<input type="" event="change=>logFunc(,return,$name.value)" name="hello">
+<input type="" event="change=>log(,true)" name="">
+<input type="" event="change=>log(,$a)" name="a">
+
+<h1 id="h1" class event="click=>scale(,1) ,dblclick=>addClass(,one), mouseover => addClass(,two)">Hello world</h1>
 
 
 <!-- --------------------------kwmckck-----------k---- -->
 <script type="text/javascript">
 
-	$impleEvent.launch();
+$impleEvent.launch();
+$impleEvent.add('alert', function(e,a){ alert(a);});
+	$impleEvent.add("hhh",function(){return "fuck you"});
+	$impleEvent.add("increment",function(e,a,b){
+		let d=parseFloat(a);
+		this.parentNode.querySelector('[data-feed=number]').style.color="red";
+		if(d){ $impleEvent.reset(this);return parseFloat(a)+b;}
+		return {number:"Must be number"}
+		
+}
+		); 
+
 </script>
 
 
