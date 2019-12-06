@@ -1,7 +1,47 @@
 //Handle returns from callback and deploy the data
 //----scope---global, parent-grandparent-self
 //------datatype-------
-export default function manageReturns(el,$return){
+export default function manageReturns(el,$return,bool){
+//if bool===true just sent return to self
+//self can embed either string, number, html or array
+ if(bool===true && el.hasAttribute($impleEvent.init.$classname)){
+ 	if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
+ 		//has [data-feed], its there for other purpose, exit
+					if(e.hasAttribute($impleEvent.init.$dataFeed)){ return false};
+								//Not Html then its string or number
+								if(!$return.nodeName){
+									//doest string or number need to append or repalce 
+									if(e.hasAttribute($impleEvent.init.$dataAppend)){
+										//need to be append
+												e.appendChild(document.createTextNode($return))
+
+												
+										}else{
+											//clear contaner and put string/number
+											e.innerHTML="";
+											e.appendChild(document.createTextNode($return));
+										}
+								}else{
+									//ITs HTML ELement
+									//every time return new element after cloning
+									let html=$impleEvent.render.cloneElement($return);
+									if(e.hasAttribute($impleEvent.init.$dataAppend)){
+										//append
+											//clone element otherwise cant apped to muliple places
+												e.appendChild(html);
+										}else{
+											//replace the container with new content
+											e.innerHTML="";
+											e.appendChild(html);
+
+										}
+										$impleEvent.update(html);
+								}
+ 	}
+
+ 	return ;
+
+ }
 //-------------------------------------------------------------------------------------	
 //case-1: Handle String/number/htmlelement
 if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
@@ -180,6 +220,9 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 
 				for(var i=0; i<$return.length;i++){
 					var cloneComponent=$impleEvent.render.cloneElement(templateElement);
+					//giving clone element unique id
+					if(cloneComponent.id) cloneComponent.id=cloneComponent.id+"_"+i;
+					cloneComponent.setAttribute("index", i);
 					e.appendChild(cloneComponent);
 					//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
 					if(!cloneComponent.childElementCount){

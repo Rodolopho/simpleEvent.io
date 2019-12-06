@@ -10,6 +10,7 @@ import {core} from './core.js';
 import dataStore from "./store.js";
 // import Datastore from './dataStore.js';
 //------------------------------------------------------------------------------------------
+	
 	const $impleEvent={};
 //Container or holders
 	//conatiner to hold callback or event handlers supplied by user using $impleEvent.add(), method
@@ -22,6 +23,33 @@ import dataStore from "./store.js";
 	$impleEvent.init=init;
 	//$imple EVent Variables 
 	$impleEvent.vars={};
+	//Simple custom event handler
+	$impleEvent.fire=function(el,method){//$impleEvent.fire(element,"add(,ar1,arg2)")
+		if(el && el.nodeName){
+			let [args,callback]=[[], null];
+			[,callback,args]=/[\s]*([\w-\.]+)([(][^)]*[)])?/.exec(method);
+			if(callback){
+				if(args){
+					args=args.replace(/[()]/g,"").split(/[,]/);
+						if($impleEvent.init.$reserveEventArgument===true) args.shift();
+				} else{
+					args=[];
+				}
+
+				$impleEvent.callbackHandler(el,callback,args,null);
+
+			}else{
+				console.error("Provide valid method, Provided " + callback);
+			}
+		}else{
+			console.error("Provide Html Element, Provided " + el);
+		}
+
+	};
+	//$impleEvnet local return
+	$impleEvent.return=function(el,$return){
+		return this.manageReturns(el.parentNode,$return);
+	};
 	//DATA-FEED RESET OR RETURN RESET
 	$impleEvent.reset=function(ele,bool){
 		let el=ele.parentNode;
@@ -38,12 +66,12 @@ import dataStore from "./store.js";
 	$impleEvent.toString=function(){return "Object $impleEvent";};
 //------------------------------------------------------------------------------------------
 //Helper Methods
-	$impleEvent.method=function(callback){
+	$impleEvent.method=function(callback,bind){
 				var data=callback.split(/\./);
 							if(data.length===2){
 								if(this.inCallbacks.hasOwnProperty(data[0])){
 									if(this.inCallbacks[data[0]].hasOwnProperty(data[1])){
-										return this.inCallbacks[data[0]][data[1]];
+										return bind?this.inCallbacks[data[0]][data[1]].bind(bind):this.inCallbacks[data[0]][data[1]];
 									}else{
 										console.error("Can't Found Method:"+data[1]+"in "+ data[0]+"Object : ref->"+callback+" ,Please Register event handler using '$impleEvent.addIn("+data[0]+", ....)' method?");
 													return false;
@@ -57,9 +85,9 @@ import dataStore from "./store.js";
 
 						// ------------------End for dot notaion
 							} else if(this.core.hasOwnProperty(callback)){
-								 return this.core[callback];
+								 return bind?this.core[callback].bind(bind):this.core[callback];
 				  			}else if(this.callbacks.hasOwnProperty(callback)){
-				  				return  this.callbacks[callback];
+				  				return  bind?this.callbacks[callback].bind(bind):this.callbacks[callback];
 				  			}else{
 				  				console.error("Can't Found Method:"+callback+" ,Please Register event handler using '$impleEvent.add()' method?");
 								return false;

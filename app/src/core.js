@@ -1,7 +1,7 @@
 export var core={
 
 	close:function(e,id,a){
-		var el=(id=="parent")?this.parentNode:document.getElementById(id);
+		var el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
 		if(el){
 			if(el.style.display=="none") {return false};
 
@@ -14,8 +14,6 @@ export var core={
 		}else{
 			console.warn("close error:-Cannot Find Element with id:"+id);
 		}
-		// this.parentNode.style.transition="all 0.35s";
-		// 		this.parentNode.style.display="none";
 
 	},
 	log:function(e,a){
@@ -34,28 +32,94 @@ export var core={
 		
 		
 	},
-	animate:function(e,a,b){
+	animate:function(e,a,b,bool){
+		// console.log("fjh");
 		//Require animate.css
 		// https://daneden.github.io/'animate.css' for animate to work
 		var el=b?document.getElementById(b):this;
-		el.setAttribute('class',el.hasAttribute('class')?el.getAttribute('class')+ " " +a+" animated":" " +a+" animated");
-		var t=setTimeout(function(){
-			el.setAttribute('class',el.getAttribute('class').replace(a,"").replace('animated',"").trim());
-			clearTimeout(t);
-		},1000);
+			el.classList.add("animated");
+			el.classList.add(a);
+			let t=setTimeout(function(){
+				el.classList.remove("animated");
+				el.classList.remove(a);
+				clearTimeout(t);
+			},1000);
+			
+		//el.classList.remove("animated");
+		//el.classList.remove(a);
+		//el.setAttribute('class',el.hasAttribute('class')?el.getAttribute('class')+ " " +a+" animated":" " +a+" animated");
 		
+		// if(!bool===true){var t=setTimeout(function(){
+		// 	el.setAttribute('class',el.getAttribute('class').replace(a,"").replace('animated',"").trim());
+		// 	clearTimeout(t);
+		// },1000);
+		// }
 		
 	},
 	//----------------------------core-------
-	dataChanger:function(e,a,b){
+	typewriter:function(e,a,b){
+			//if a===true the chnage event to keyup
+		//if(this.hasAttribute($impleEvent.init.$dataGet)){
+			
 
+					// let label=$impleEvent.createElement("label",{style:"font-weight:bold;margin:0px 5px;background:#ccc",});
+					let input=$impleEvent.createElement("input",{
+						style:"outline:none; border:none;font-style:italic;padding:0px;margin:0px;width:1rem;font:inherit;",
+						placeholder:"TypeWriter"
+					});
+					// label.innerText=this.getAttribute($impleEvent.init.$dataGet);
+					// input.value=this.getAttribute("value");
+
+					
+					
+					
+			
+			let _this=this;
+			//console.log(this);
+			input.onclick=function(e){
+				e.stopPropagation();	
+			};
+						
+			 this.style.position="relative";
+			 
+			 input.value=this.value?this.value:this.getAttribute("value");
+
+			this.appendChild(input);
+			
+				input.onkeyup=function(ev){
+					
+					if(ev.which==8){
+						console.log(this.previousSibling);
+						return;
+					}
+				//}
+				_this.setAttribute("value","");
+				$impleEvent.manageReturns(_this,this.value,true);
+				input.value="";
+			}
+
+			input.onchange=function(){
+					input.parentNode.removeChild(input);
+				}
+				input.onblur=function(){
+					input.parentNode.removeChild(input);
+				}
+				input.focus();
+		//}
+		
+	
+
+	},
+	
+	dataChanger:function(e,a,b){
+			//if a===true the chnage event to keyup
 		if(this.hasAttribute($impleEvent.init.$dataGet)){
-			if(!$impleEvent.form){
-				var form=$impleEvent.createElement("div", {
+			
+				let form=$impleEvent.createElement("div", {
 				style:"padding:5px;border:1px solid #ccc;background:#ccc;border-radius:5px;postion:absolute;z-index:12345678998654;"
 				});
-					var label=$impleEvent.createElement("label",{style:"font-weight:bold;margin:0px 5px;background:#ccc",});
-					var input=$impleEvent.createElement("input",{style:"outline:none; border:none;border-bottom:1px solid #eee;"});
+					let label=$impleEvent.createElement("label",{style:"font-weight:bold;margin:0px 5px;background:#ccc",});
+					let input=$impleEvent.createElement("input",{style:"outline:none; border:none;border-bottom:1px solid #eee;"});
 					label.innerText=this.getAttribute($impleEvent.init.$dataGet);
 					input.value=this.getAttribute("value");
 
@@ -65,25 +129,42 @@ export var core={
 					form.style.zIndex=123456789876644;
 					form.style.top="100%";
 					form.style.opacity="0.9";
-					$impleEvent.form={form:form,label:label,input:input};
-			}
-			var _this=this;
+					//{form:form,label:label,input:input};
+			
+			let _this=this;
 			//console.log(this);
-			$impleEvent.form.form.onclick=function(e){
-				e.stopPropagation();
-				
-				
+			form.onclick=function(e){
+				e.stopPropagation();	
 			};
-						 //$impleEvent.form;
+						 //
 			 this.style.position="relative";
-			 $impleEvent.form.label.innerText=this.getAttribute($impleEvent.init.$dataGet);
-					$impleEvent.form.input.value=this.getAttribute("value");
-			this.appendChild($impleEvent.form.form);
-			$impleEvent.form.input.onchange=function(){
+			 label.innerText=this.getAttribute($impleEvent.init.$dataGet);
+			 input.value=this.value?this.value:this.getAttribute("value");
+
+			this.appendChild(form);
+			if(a===true){
+				input.onkeyup=function(){
 				
 				_this.setAttribute("value",this.value);
 				$impleEvent.manageReturns(_this,this.value)
+
+				input.onchange=function(){
+					form.parentNode.removeChild(form);
+				}
 				//return this.getAttribute("value");
+			}
+		}else{
+
+		
+			input.onchange=function(){
+				
+				_this.setAttribute("value",this.value);
+				$impleEvent.manageReturns(_this,this.value)
+
+				form.parentNode.removeChild(form);
+
+				//return this.getAttribute("value");
+			}
 			}
 		}
 		
@@ -127,46 +208,7 @@ export var core={
 		}
 		ele.classList.toggle(a);
 	},
-	//--------------------------------------------------
-	rotate:function(e,a,b,c){
-		this.style.transition="all 0.35s";
-		var args=core.refactorArgs(arguments,1);
-		if(Object.prototype.toString.call(args) == "[object Object]"){
-			Array.prototype.forEach.call(core.scopify(this,args.scope,args.classname),function(e){
-				e.style.transition="all 0.35s";
-				e.style.transform="rotate( "+args.args[0]+")";
-			});
-
-		}else if(args){
-			this.style.transform="rotate( "+args[0]+")";
-		}else{
-			var value=Math.round(Math.random(1)*90) +"deg";
-			this.style.transform="rotate( "+value+")";
-			return value;
-		}	
-	},
-	verticalSlideChnage:function(){
-
-	},
-	scale:function(e,a,b,id){
-		this.style.transition="all 0.35s";
-		//case 1: if has one argsi.e if args.length=1;
-		if(arguments.length==2 && isFinite(a)){
-			this.style.transform="scale( "+a+")";
-		}else if(arguments.length==3 && isFinite(a) && isFinite(b)){
-			this.style.transform="scale( "+a+","+b+")";
-
-		}else if(arguments.length==4 && isFinite(a) && isFinite(b) && document.getElementById(id)){
-			document.getElementById(id).style.transition="all 0.35s";
-				document.getElementById(id).style.transform="scale( "+a+","+b+")";
-		}else{
-			console.warn("Something Wrong with arguments you provided, unable to scale on " + e.type);
-			
-
-		}
-		
-
-	},
+	
 	css:function(e,a,b,id){
 		this.style.transition="all 0.35s";
 		if(arguments.length==3){
@@ -221,57 +263,7 @@ export var core={
 		}
 
 	},
-	resize:function(e,a,b){
-	
-		if(a=="fullscreen" && b){
-			var el=document.getElementById(b);
-			if(el){
-				el.setAttribute("data-resize",el.style.width+":"+el.style.height);
-				el.style.width=window.innerWidth + "px";
-				el.style.height=window.innerHeight+ "px";
-				el.style.position="fixed";
-				el.style.top="0";
-				return false;
-			}
-
-			
-		}
-		if(a=="initial" && b){
-			var el=document.getElementById(b);
-			if(el){
-				if(el.hasAttribute("data-resize")){
-					el.style.width="initial";
-					el.style.height="initial";
-					el.style.position="initial";
-					el.style.top="initial";
-				return false;
-				}else{
-					el.style.width="initial";
-					el.style.height="initial";
-					el.style.position="initial";
-					el.style.top="initial";
-					return false;
-				}
-				
-			}
-
-		}
-
-			var w=parseInt(this.style.width);
-			var h=parseInt(this.style.height);
-			var pw=parseInt(a);
-			var ph=parseInt(b)
-			if(pw && ph){
-				this.style.width=w-w*pw/100 + "px";
-				this.style.height=h-h*ph/100 + "px";
-
-			}else if(pw){
-				this.style.width=w-w*pw/100 + "px";
-				this.style.height=h-h*pw/100 + "px";
-
-			}
-		},
-		timeout:function(e,a,b){
+	timeout:function(e,a,b){
 			if(!isFinite(b)){
 				console.log("please Provide Time in ms; for timeout function");
 				return false;
@@ -316,70 +308,6 @@ export var core={
 
 
 		},
-		hide:function(e,a){//visibility: hidden
-			if(a=="parent"){
-				this.parentNode.style.transition="all 0.35s";
-				this.parentNode.style.display="none";
-
-			}else if(a=="prev"){
-				this.previousElementSibling.style.transition="all 0.35s";
-				this.previousElementSibling.style.display="none";
-			}else if(a=="next"){
-				this.nextElementSibling.style.transition="all 0.35s";
-				this.nextElementSibling.style.display="none";
-			}
-		},
-		show:function(e,a){//display:initial
-			if(a=="parent"){
-				this.parentNode.style.transition="all 0.35s";
-				this.parentNode.style.display="initial";
-
-			}else if(a=="prev"){
-				this.previousElementSibling.style.transition="all 0.35s";
-				this.previousElementSibling.style.display="initial";
-			}else if(a=="next"){
-				this.nextElementSibling.style.transition="all 0.35s";
-				this.nextElementSibling.style.display="initial";
-			}
-		},
-		toggle:function(e,a,c,d){
-
-		 if(a=="prev"){
-		 	//alert(this.previousElementSibling.style.display=="none");
-		 		if(this.previousElementSibling.style.display!="none"){
-		 			this.previousElementSibling.style.transition="all 0.35s";
-		 			this.previousElementSibling.style.display="none";
-		 			if(d) this.innerText=d;
-		 		}else{
-		 			this.previousElementSibling.style.transition="all 0.35s";
-		 			this.previousElementSibling.style.display="initial";
-		 			if(c)this.innerText=c;	
-		 		}
-				
-			}else if(a=="next"){
-				if(this.nextElementSibling.style.display!="none"){
-					this.nextElementSibling.style.transition="all 0.35s";
-		 			this.nextElementSibling.style.display="none";
-		 			if(d) this.innerText=d;
-		 		}else{
-		 			this.nextElementSibling.style.transition="all 0.35s";
-		 			this.nextElementSibling.style.display="initial";
-		 			if(c)this.innerText=c;
-		 		}
-				
-			}else if(document.getElementById(a)){
-
-				if(document.getElementById(a).style.display!="none"){
-					document.getElementById(a).style.transition="all 0.35s";
-		 			document.getElementById(a).style.display="none";
-		 			if(d) this.innerText=d;
-		 		}else{
-		 			document.getElementById(a).style.transition="all 0.35s";
-		 			document.getElementById(a).style.display="initial";
-		 			if(c)this.innerText=c;	
-		 		}
-			}else{
-				console.warn("Something Wrong with arguments you provided, unable to appy style/css on " + e.type);
-			}
-		},
+		
+		
 };

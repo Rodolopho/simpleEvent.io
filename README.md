@@ -9,7 +9,7 @@
 ```
 ###### Here you proving a callback function "openModal and closeModal" for event type "click" on above element.You can provide muliple events just seperating it with ',' or space.ie 
 ```html
-<button event="click>showForm() , dblclick=>fillForm()">Test</button>
+<button event="click=>showForm() , dblclick=>fillForm()">Test</button>
 ```
 
 #### 2) Once you declare event attribute with atleast event type and callback function, second thing you do is register callback using $impleEvent.register(); or $impleEvent.add(); method. 
@@ -35,7 +35,7 @@ Lets suppose you have a Subscribe field .
 ```html
 ......
 <div class="subscribe">
-  <input event="change=>validate(email)">
+  <input event="change=>validate(,email)">
   <span class="return help"></span>
 </div>
 ......
@@ -157,7 +157,7 @@ The Holder for array returns are diffrent from normal holder, the holder should 
 ```html
 <div class="array-example">
   <ul  id="ul" data-append data-component="li">
-    <li id="li"  class=""><span event="click_return_Hello" class="return c_nred" ></span>Component</li>
+    <li id="li"  class=""><span event="click=>return(,'Hello')" class="return c_nred" ></span>Component</li>
   </ul>
   <button event="click_getCountry" >Get list of countries</button>
 </div>

@@ -1,6 +1,7 @@
 export let init={
 			
 			$useArrow:true,
+			$event:'event',//action
 			$useVar:true,
 			$seperatorArrow:/([a-z]+)[\s]*[=][>][\s]*([\w-\.]+)([(][^)]*[)])?/,
 			$seperatorArrowGlobal:new RegExp(/([a-z]+)[\s]*[=][>][\s]*([\w-\.]+)([(][^)]*[)])?/,"g"),

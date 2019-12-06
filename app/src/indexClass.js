@@ -1,4 +1,4 @@
-
+/*
 import {init} from './init.js';
 import {render} from "./render.js";
 import eventManager from "./eventbeta.js";

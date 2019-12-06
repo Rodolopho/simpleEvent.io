@@ -68,7 +68,7 @@ export var  render={
 
 			}else{
 				el=$impleEvent.createElement(obj[1].tagName, obj[1].attributes);
-				if(el.id){el.id=el.id+1};
+				// if(el.id){el.id=el.id+1};
 				this.obj2Html(obj[1],el);
 				
 			}

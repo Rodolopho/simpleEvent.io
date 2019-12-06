@@ -1,6 +1,4 @@
 //Data-base in Json format
-
-
 export default function datastore(el, _default){ 
 	let store={};
 	if(el && el.nodeName){
@@ -11,10 +9,23 @@ export default function datastore(el, _default){
 					store=JSON.parse(data)
 				} catch(e){
 					console.error("Please Provide Valid JSON data: Provided "+data);
-					return null;
+
+					if(_default){
+						console.warn("Using default dataStore instead ");
+						 store=_default;
+						 el.setAttribute($impleEvent.init.$dataStore, JSON.stringify(store));
+
+					}else{
+						return null;
+					}
+					
 				}
 			}else{
-				if(_default) store=_default;
+				if(_default){
+					console.warn("Using default dataStore instead ");
+						 store=_default;
+						 el.setAttribute($impleEvent.init.$dataStore, JSON.stringify(store));
+				}
 			}
 
 		}else{
