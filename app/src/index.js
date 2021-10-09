@@ -3,7 +3,8 @@ import {init} from './init.js';
 import {render} from "./render.js";
 import eventManager from "./eventbeta.js";
 import callbackHandler from "./callback.js";
-import  manageReturns from "./return.js";
+import argumentsHandler from "./argumentsHandlereditfinal.js";
+import  manageReturns from "./returnbkedit.js";
 import  getData from "./retrive.js";
 import  setData from "./assign.js";
 import {core} from './core.js';
@@ -12,17 +13,60 @@ import dataStore from "./store.js";
 //------------------------------------------------------------------------------------------
 	
 	const $impleEvent={};
+
+
+//processors
+	//Responisble for binding event to element with coressponding callbacks eventManager(el,eventList,invoke)
+	$impleEvent.eventManager=eventManager;// evenhandler call callbackhandles calls manage return
+	//------------------------------------------------------------------------------------------
+
+	//Handle callback , check for callback data 
+	//.    callbackHandler(el,callback,args,e){
+	$impleEvent.callbackHandler=callbackHandler;
+
+	//----------------------------------------------------------
+	// handles the arguments supplied to callback function in event attribute of element
+	$impleEvent.argumentsHandler=argumentsHandler;
+
+	//-----------------------------------
+	//Handle the returns from callback when event occurs, if callback has a return
+	//           manageReturns(el.parentNode,$return);
+	 $impleEvent.manageReturns=manageReturns;
+	
+	//Responsible for rendering html to the document, with approppriate returns
+	 $impleEvent.render=render;
+//Helper
+	//DOC:-$implEvent.getDate(el); will get data from child elements which have name or data-get attribute 
+	//and returns in {} with key and value pair
+    $impleEvent.getData=getData;
+    //DOC:-$impleEvent.setData()
+	$impleEvent.setData=setData;
+	// $impleEvent.getDataStore=getDataStore;
+	// $impleEvent.setDataStore=setDataStore;
+	$impleEvent.dataStore=dataStore;	 
+	//------------------------------------------------------------------------------------------	
 //Container or holders
-	//conatiner to hold callback or event handlers supplied by user using $impleEvent.add(), method
+	//conatiner to hold callbacks or event handlers supplied by user using $impleEvent.add(), method
 	$impleEvent.callbacks={};
-	//$imple Event native Collection of callbacks
+
+	// callbacks conatiner for notation i.e user.getFullName using $impleEvent.addIn('user','getFullName', function(){})
 	$impleEvent.inCallbacks={};
+
 	//$imple Event native Collection of callbacks
 	$impleEvent.core=core;
 	//Application initilization and config data, can be modified using $impleEvent.config(), method
 	$impleEvent.init=init;
 	//$imple EVent Variables 
 	$impleEvent.vars={};
+	//JSON Parse
+	$impleEvent.parseJSON=function(data){
+
+		try{
+			return JSON.parse(data);
+		} catch(e){
+			return data;
+		}
+	};
 	//Simple custom event handler
 	$impleEvent.fire=function(el,method){//$impleEvent.fire(element,"add(,ar1,arg2)")
 		if(el && el.nodeName){
@@ -44,6 +88,38 @@ import dataStore from "./store.js";
 		}else{
 			console.error("Provide Html Element, Provided " + el);
 		}
+
+	};
+	$impleEvent.invoke=function(el,event){//$impleEvent.fire(element,"add(,ar1,arg2)")
+	// if event is provided tigger that event , else find invoke and execute
+	 let invoke=event?event:'invoke';
+		if(el && el.nodeName && el.hasAttribute(this.init.$event)){
+
+			let eventAttribute=el.getAttribute(this.init.$event);
+				
+				if(eventAttribute.trim()){
+					if(this.init.$useArrow===true){
+						let remains=eventAttribute.replace($impleEvent.init.$seperatorArrowGlobal,"");
+
+						if(remains.replace(/[,;]/g,"").trim()){
+							console.error("Invalid syntax defination:'"+remains,el);
+							console.warn(" Must provided atleast eventname and callback  in arrow function format 'event=>callback(,arg1,ar2)' seperated by ',' for multiple entry" );
+						}
+			
+						this.eventManager(el, eventAttribute.match(this.init.$seperatorArrowGlobal),invoke);
+					}else{
+						this.eventManager(el,eventAttribute.split(/\s+/),invoke);
+					}
+					
+					
+				}
+					
+			}
+
+
+
+
+			
 
 	};
 	//$impleEvnet local return
@@ -132,7 +208,7 @@ import dataStore from "./store.js";
 	};
 
 	
-	//Covert html string in html.
+	//Covert html string in html. "<li>"
 	$impleEvent.asHTML=function(string){
 		var ele=this.createElement('div');
 		ele.innerHTML=string;
@@ -169,20 +245,13 @@ import dataStore from "./store.js";
 	// };
 	//------------------------------------------------------------------------------------------
 	//Return {} with key and value, where key is name or data-get, and value is value="" or el.value
-	$impleEvent.getData=getData;
-	$impleEvent.setData=setData;
-	// $impleEvent.getDataStore=getDataStore;
-	// $impleEvent.setDataStore=setDataStore;
-	$impleEvent.dataStore=dataStore;
+	
 	
 	//Validation  check and reference check to callback provide by user 
 	//this function is called by $impleEvent.getData(); which passes e, name, value to this function
 	//only applicable to user input not applicable to getAttribute("value");
-	$impleEvent.validate=function(e,name, value){//e=event, name=name attribute value e.g name, email
-			let validate=e.getAttribute($impleEvent.init.$dataValidate);
-				if($impleEvent.callbacks[validate]){
-					return $impleEvent.callbacks[validate](e,name,value);
-				}
+	$impleEvent.validate=function(el,name, value){//e=event, name=name attribute value e.g name, email
+			  if(this.core.validate.hasOwnProperty('name')){}
 			};
 	//------------------------------------------------------------------------------------------	
 	//--------------------------------------------------------------------
@@ -284,15 +353,15 @@ import dataStore from "./store.js";
 			// console.log(element);
 			//if el has any event 
 			//----------------			---------------------------------
-			 if(element!=document && element.getAttribute('event')){
+			 if(element!=document && element.hasAttribute('event')){
 			 	
-			 	let eventAttribute=element.getAttribute('event');
+			 	let eventAttribute=element.getAttribute('event').trim();
 				
-				if(eventAttribute.trim()){
+				if(eventAttribute){
 					if(this.init.$useArrow===true){
 						let remains=eventAttribute.replace($impleEvent.init.$seperatorArrowGlobal,"");
-
-						if(remains.replace(/,/g,"").trim()){
+						//console.log(remains);
+						if(remains.replace(/[,;]/g,"").trim()){
 							console.error("Invalid syntax defination:'"+remains,element);
 							console.warn(" Must provided atleast eventname and callback  in arrow function format 'event=>callback(,arg1,ar2)' seperated by ',' for multiple entry" );
 						}
@@ -306,9 +375,9 @@ import dataStore from "./store.js";
 				}
 			 }//end of self or root el event mangement
 			 //---------------------------------------------------------
-			var elements=element.querySelectorAll('[event]');
+			let elements=element.querySelectorAll('[event]');
 			
-			 for(var i=0; i<elements.length; i++){
+			 for(let i=0; i<elements.length; i++){
 			 	
 				let eventAttribute=elements[i].getAttribute('event');
 				
@@ -316,7 +385,7 @@ import dataStore from "./store.js";
 					if(this.init.$useArrow===true){
 						let remains=eventAttribute.replace($impleEvent.init.$seperatorArrowGlobal,"");
 
-						if(remains.replace(/,/g,"").trim()){
+						if(remains.replace(/[,;]/g,"").trim()){
 							console.error("Invalid syntax defination:'"+remains,elements[i]);
 							console.warn(" Must provided atleast eventname and callback  in arrow function format 'event=>callback(,arg1,ar2)' seperated by ',' for multiple entry" );
 						}
@@ -333,20 +402,7 @@ import dataStore from "./store.js";
 	};
 	//------------------------------------------------------------------------------------------
 
-//processors
-	//Responisble for binding event to element with coressponding callbacks
-	$impleEvent.eventManager=eventManager;
-	//------------------------------------------------------------------------------------------
 
-	//Handle callback , check for callback data 
-	$impleEvent.callbackHandler=callbackHandler;
-	//----------------------------------------------------------
-	//Handle the returns from callback when event occurs, if callback has a return
-	 $impleEvent.manageReturns=manageReturns;
-	
-	//Responsible for rendering html to the document, with approppriate returns
-	 $impleEvent.render=render;
-	//------------------------------------------------------------------------------------------
 
 	//attach $implEvent to Window after checking for namespace collision and duplicate implementation of library
 	if(window.$impleEvent){

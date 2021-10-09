@@ -1,13 +1,13 @@
-export var core={
+export let core={
 
-	close:function(e,id,a){
-		var el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
+	close:function(event,ele,bool){
+		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
 		if(el){
 			if(el.style.display=="none") {return false};
 
-			if(a==="true"){
-				var result=confirm('Are you sure want to close?');
-				$impleEvent.core.animate.call(this, e, "bounce");
+			if(bool===true){
+				let result=confirm('Are you sure want to close?');
+				
 				return result?(el.style.display="none"):false;
 			}
 			el.style.display="none";
@@ -16,46 +16,41 @@ export var core={
 		}
 
 	},
-	log:function(e,a){
-		console.log(a);
+	openClose:function(event,id,bool){
+		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
+		if(el){
+			if(el.style.display=="none") {
+				el.style.display="initial";
+				return false};
+
+			if(bool===true){
+				let result=confirm('Are you sure want to close?');
+				
+				return result?(el.style.display="none"):false;
+			}
+			el.style.display="none";
+		}else{
+			console.warn("openClose error:-Cannot Find Element to close:"+id);
+		}
+
 	},
-	logEvent:function(e){
-		console.log(e.type,"\n",e);
+	log:function(event,info){
+		console.log(info);
 	},
-	logFunc:function(ev,f,a,b,c,d,e){
-		f=f.trim();
-		if($impleEvent.callbacks.hasOwnProperty(f)){
-			console.log($impleEvent.callbacks[f](ev,a,b,c,d,e));
-		}else if(core.hasOwnProperty(f)){
-			console.log(core[f](ev,a,b,c,d,e));
+	logEvent:function(event){
+		console.log(event.type,"\n",event);
+	},
+	logFunc:function(event,callbackName,arg1,arg2,arg3,arg4,arg5){
+		callbackName=callbackName.trim();
+		if($impleEvent.callbacks.hasOwnProperty(callbackName)){
+			console.log($impleEvent.callbacks[callbackName](event,arg1,arg2,arg3,arg4,arg5));
+		}else if(core.hasOwnProperty(callbackName)){
+			console.log(core[callbackName](event,arg1,arg2,arg3,arg4,arg5));
 		}
 		
 		
 	},
-	animate:function(e,a,b,bool){
-		// console.log("fjh");
-		//Require animate.css
-		// https://daneden.github.io/'animate.css' for animate to work
-		var el=b?document.getElementById(b):this;
-			el.classList.add("animated");
-			el.classList.add(a);
-			let t=setTimeout(function(){
-				el.classList.remove("animated");
-				el.classList.remove(a);
-				clearTimeout(t);
-			},1000);
-			
-		//el.classList.remove("animated");
-		//el.classList.remove(a);
-		//el.setAttribute('class',el.hasAttribute('class')?el.getAttribute('class')+ " " +a+" animated":" " +a+" animated");
-		
-		// if(!bool===true){var t=setTimeout(function(){
-		// 	el.setAttribute('class',el.getAttribute('class').replace(a,"").replace('animated',"").trim());
-		// 	clearTimeout(t);
-		// },1000);
-		// }
-		
-	},
+
 	//----------------------------core-------
 	typewriter:function(e,a,b){
 			//if a===true the chnage event to keyup
@@ -170,11 +165,11 @@ export var core={
 		
 	},
 	carousel:function(e,a,b){
-		var images=this.getElementsByTagName("img");
+		let images=this.getElementsByTagName("img");
 		if(!this.hasAttribute("index")){this.setAttribute("index",0);}
-		var index=parseInt(this.getAttribute('index'));
+		let index=parseInt(this.getAttribute('index'));
 
-		for(var i=0;i<images.length;i++){
+		for(let i=0;i<images.length;i++){
 			images[i].style.display="none";
 		}
 
@@ -185,38 +180,40 @@ export var core={
 		    
 	},
 	//-----------------------class------------------------
-	addClass:function(e,a,b){
-		var ele=this;
-		if(b && document.getElementById(b)){
-			ele=document.getElementById(b);
+	addClassName:function(e,a,id){
+		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
+		let ele=this;
+		if(id && document.getElementById(id)){
+			ele=document.getElementById(id);
 		}
+		// if(Array.isArray(a)){ a.}
 		ele.classList.add(a);
 
 
 	},
-	removeClass:function(e,a,b){
-		var ele=this;
-		if(b && document.getElementById(b)){
-			ele=document.getElementById(b);
+	removeClassName:function(e,a,id){
+		let ele=this;
+		if(id && document.getElementById(id)){
+			ele=document.getElementById(id);
 		}
 		ele.classList.remove(a);
 	},
-	toggleClass:function(e,a,b){
-		var ele=this;
-		if(b && document.getElementById(b)){
-			ele=document.getElementById(b);
+	toggleClassName:function(e,a,id){
+		let ele=this;
+		if(id && document.getElementById(id)){
+			ele=document.getElementById(id);
 		}
 		ele.classList.toggle(a);
 	},
 	
-	css:function(e,a,b,id){
+	css:function(e,property,value,id){
 		this.style.transition="all 0.35s";
 		if(arguments.length==3){
-			this.style[a]=b;
+			this.style[property]=value;
 
 		}else if(arguments.length=4 && document.getElementById(id)){
 			document.getElementById(id).style.transition="all 0.35s";
-			document.getElementById(id).style[a]=b;
+			document.getElementById(id).style[property]=value;
 
 		}else{
 			console.warn("Something Wrong with arguments you provided, unable to appy style/css on " + e.type);
@@ -230,7 +227,7 @@ export var core={
 
 		}
 		if(a){
-			return a.replace(/\/s/g," ").trim();
+			return a;
 		}else{
 
 			console.warn("Returning empty string  on " + e.type);
@@ -252,9 +249,7 @@ export var core={
 			return {
 				returnTo:{
 					el:document.getElementById(id),
-					data:{
-						self:a
-					}
+					data:a
 				}
 			}
 		}else{
@@ -263,17 +258,19 @@ export var core={
 		}
 
 	},
+	//onevent when calling timeout function 
 	timeout:function(e,a,b){
 			if(!isFinite(b)){
 				console.log("please Provide Time in ms; for timeout function");
 				return false;
 
 			}
+			
 			if($impleEvent.core.hasOwnProperty(a)){
-				var timer=setTimeout($impleEvent.core[a].bind(this), b);
+				let timer=setTimeout($impleEvent.core[a].bind(this), b);
 					
 				}else if($impleEvent.callbacks.hasOwnProperty(a)){
-					var timer=setTimeout($impleEvent.callbacks[a].bind(this,[e,timer]), b);
+					let timer=setTimeout($impleEvent.callbacks[a].bind(this,[e,timer]), b);
 					
 
 				//case 3: no callback is define
@@ -285,6 +282,7 @@ export var core={
 
 
 		},
+
 		interval:function(e,a,b){
 			if(!isFinite(b)){
 				console.log("please Provide Time in ms; for interval function");
@@ -293,10 +291,10 @@ export var core={
 			}
 			if($impleEvent.core.hasOwnProperty(a)){
 				console.log("wow");
-				var interval=setInterval($impleEvent.core[a].bind(this,[e,interval]), b);
+				let interval=setInterval($impleEvent.core[a].bind(this,[e,interval]), b);
 					
 				}else if($impleEvent.callbacks.hasOwnProperty(a)){
-					var interval=setInterval($impleEvent.callbacks[a].bind(this,[e,interval]), b);
+					let interval=setInterval($impleEvent.callbacks[a].bind(this,[e,interval]), b);
 					
 
 				//case 3: no callback is define
@@ -308,6 +306,46 @@ export var core={
 
 
 		},
+		validate:{
+			email:{
+				test:/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/,
+				success:"You have provided Valid email Id",
+				fail:"Please provide Valid Email address",
+			},
+			number:{
+				test:/^\d+$/,
+				success:"",
+				fail:"Please provide number only",
+			}, 
+			required:{
+				test:/\S+/,
+				success:"",
+				fail:"This field cant be empty"
+			}
+		},
 		
 		
 };
+
+
+
+
+
+// ',1,[2,(3),4],3,{a,b,c}, [a,b,c,d]'.replace(/([/[][a-zA-Z0-9_-,]*[\]]|[{].*[}])/g,function(e){
+// 	return e.replace(/[,]/g,':;:')
+// })
+// .split(/[,]/).map(function(e){
+// 	if(e.match(/([/[].+[\]])/g)){
+// 		 return e.replace(/[\[\]]/g,"").split(':;:');
+// 	}else if(e.match(/([{].+[}])/g)){
+// 		return e.replace(/:;:/g,",");
+// 	}else{
+// 		return e;
+// 	}
+// 	})
+
+
+
+
+
+

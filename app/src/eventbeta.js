@@ -1,11 +1,11 @@
 //Event Handler
 
-export default function eventManager(el,eventList){
+export default function eventManager(el,eventList,invoke){
 	
 //---------------------------------FOR EACH EVENT DATA--------------------------					// 
 //event list is the list of events like [click_somefunc,dbl_someOtherfunc]
 	//for each events in eventList
-		for(var i=0; i<eventList.length;i++){
+		for(let i=0; i<eventList.length;i++){
 
 			if(!eventList[i].trim()) return false;
 			//wraping in self invoking function to solve event async issue
@@ -15,9 +15,10 @@ export default function eventManager(el,eventList){
 				if($impleEvent.init.$useArrow===true){
 					if($impleEvent.init.$seperatorArrow.test(eventList[i])){
 						 [,event,callback,args]=$impleEvent.init.$seperatorArrow.exec(eventList[i]);
-						if(args){
-							args=args.replace(/[()]/g,"").split(/[,]/);
-							if($impleEvent.init.$reserveEventArgument===true) args.shift();
+						if(args && args.replace(/^[(]|[)]$/g,"").trim() ){
+							args=args.replace(/^[(]|[)]$/g,"").trim().split(/[,]/);
+							//if frist arugent is reserved for event object,
+							// if($impleEvent.init.$reserveEventArgument===true) args.shift();
 						} else{
 							args=[];
 						}
@@ -44,10 +45,18 @@ export default function eventManager(el,eventList){
 					 callback=data[1];
 					args=data.slice(2);	
 				}
-				
+//-----------------incase of invoke call---------------------
+				if(invoke){
+					if(event===invoke){
+						$impleEvent.callbackHandler(el,callback,args,invoke);
+					}
+
+					return;
+				}				
 
 //-------------Finally Handle Events---------------------------------------	// 
 				//-----------custon event 'call'-----------------------------//
+				   if (event==='invoke') return;
 					if(event=='call'){
 						window.addEventListener("load", function(e) {
 								$impleEvent.callbackHandler(el,callback,args,e)
@@ -61,7 +70,7 @@ export default function eventManager(el,eventList){
 				  		//e.g event="timeout_callback_t_arg2_arg3"//time will be agr1
 				  		if(isFinite(args[0])){
 				  			let time=args[0];
-									// args.shift();
+									console.log(args.shift());
 				  			if(event=="interval"){
 				  				
 				  				var interval=setInterval(function(){
@@ -89,16 +98,24 @@ export default function eventManager(el,eventList){
 					}else{
 
 		  			el.addEventListener(event,function f(e){
-		  				//store callback reference so that we can detach liste
-			  				e.removeEventListener=function(){
+		  				//The code below will execute every time , event is triggered
+		  				//store callback reference so that we can detach listener
+		  					
+		  						 
+		  					e.removeEventListener=function(){
+
 			  					el.removeEventListener(this.type, f);
 			  				};
+			  				
+		  				
+			  				
 			  				//------------Add event object to begining of arugumnet------
 									// args.unshift("DKFDSHFKHSDFK");
 							//------------------------------------------------------------
 			  				
 
-			  				$impleEvent.callbackHandler(el,callback,args,e);
+			  				 $impleEvent.callbackHandler(el,callback,args,e);
+			  				// $impleEvent.callbackHandler(el,callback,$impleEvent.argumentsHandler(el,args).push(e),e);
 
 		  			},//EndOFAddEventHandler
 		  			false);
@@ -108,8 +125,15 @@ export default function eventManager(el,eventList){
 
 
 				  }//eoelse	
+
+		// 		  if(el.hasAttribute($impleEvent.init.$eventOnce)){
+		// 	el.removeAttribute('event');
+		// 	console.log(el);
+		// }
 			})();//ENDCOlusure	  
 		};//eo for loop
+
+		
 
 }//EOMAIN		
 				  			

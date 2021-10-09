@@ -1,0 +1,58 @@
+SimpleEvent Note:-
+
+Future note as of 26/08/2021
+<text>[2]//for textnode selection with in sibling
+<next><previous><parent><firstChild><lastChild><odd><even><nth>[5]
+
+Custom event: call, timeout and interval
+<button event='call=>afterload()'>
+<button event='time=>afterload(,secondArgumentmustbetimeIinms)'>
+<button event='time=>log(t,500ms)'>
+<button event="click=>user.getFullname(e,'Ram')"></button>
+
+ :// data-filter accept a return as argument and must return a valid $return
+ :// data-set='querySelctore' will set $dataGet attri and [value] attri to queryseleccted Element, where key and value 
+ :// is provides by getData(el,true); which returns [key, value]
+
+
+
+event="click=>callback(ResevedForEventObject,argument1, argument2.....); click=>alert('What the hell')"
+   1) Arguments:- // reference makeArguments @callback.js
+     'agument'           			: 'string';  '' or " "
+     #argumet 						: html elemnt with id '#argumet' no quotes // #id
+     #argument.attribute			: 		return object with get, set, value and element
+     #argument.attr.value 			: returns value
+     <querySelctorall> 				: return queryselctor all // <html>
+     <queryselctor>[0] 				: queryselector and nth item in arrya position
+     <querySelctor>[0].attr 		: return object with get, set, value and element;
+     $argumet  						: self attribute returns obj with get, set, value and element 
+     $argumet.value  				: self attribute value  // [attribute]
+
+     $$argumet and $$$argumet 		: parentelemt and parent parent element // attribute 
+
+
+   2) Returns // caputre return fropm your callbacks
+        Requiremnt: Conatiner must contain ".return" classname or specified in $return attribut in init file
+
+        General return
+        --------------
+         return types: String | HTML | Number
+          .return
+
+        Return Object  
+        -------------
+        .return [data-feed=key]// where key is the key of object
+
+
+
+        Return Array
+        --------------
+        Requires holder for template defination
+         data-template for incline string html defination
+         data-component where queryselctor is supplied to borrow templeplate 
+
+         object type item requres wrapper with child element having  .return [data-feed=key]
+       
+
+    data-get|data-validate|data-feed
+    <span class="return" data-feed="name"  ondata-feed=getFullName  emit="datafeed=>doSomething()"></span>

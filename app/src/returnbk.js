@@ -6,7 +6,6 @@ export default function manageReturns(el,$return,bool){
 //self can embed either string, number, html or array
  if(bool===true && el.hasAttribute($impleEvent.init.$classname)){
  	if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
- 		console.log($return);	
  		//has [data-feed], its there for other purpose, exit
 					if(e.hasAttribute($impleEvent.init.$dataFeed)){ return false};
 								//Not Html then its string or number
@@ -251,7 +250,7 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 					//giving clone element unique id
 					if(cloneComponent.id) cloneComponent.id=cloneComponent.id+"_"+i;
 					cloneComponent.setAttribute("index", i);
-					rawElement.appendChild(cloneComponent);
+					e.appendChild(cloneComponent);
 					//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
 					if(!cloneComponent.childElementCount){
 						//--------------------------------------------------
@@ -280,10 +279,8 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 						$impleEvent.manageReturns(cloneComponent,$return[i]);
 					}
 
-					// $impleEvent.update(cloneComponent);
+					$impleEvent.update(cloneComponent);
 				}//END of for loop
-				 e.appendChild(rawElement);
-				$impleEvent.update(rawElement); 
 
 
 		// 	}else{

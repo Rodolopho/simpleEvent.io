@@ -8,7 +8,7 @@ export default function datastore(el, _default){
 				try{
 					store=JSON.parse(data)
 				} catch(e){
-					console.error("Please Provide Valid JSON data: Provided "+data);
+					console.error("Please Provide Valid JSON data: Provided: "+data);
 
 					if(_default){
 						console.warn("Using default dataStore instead ");

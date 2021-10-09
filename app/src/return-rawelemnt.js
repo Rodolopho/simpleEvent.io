@@ -6,7 +6,6 @@ export default function manageReturns(el,$return,bool){
 //self can embed either string, number, html or array
  if(bool===true && el.hasAttribute($impleEvent.init.$classname)){
  	if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
- 		console.log($return);	
  		//has [data-feed], its there for other purpose, exit
 					if(e.hasAttribute($impleEvent.init.$dataFeed)){ return false};
 								//Not Html then its string or number
