@@ -1,84 +1,47 @@
 //Handle returns from callback and deploy the data
 //----scope---global, parent-grandparent-self
 //------datatype-------
+
+ function appendData(el,data){
+
+ 	if(!el.hasAttribute($impleEvent.init.$dataAppend)) el.innerHTML="";
+ 	
+ 	if(typeof data === 'string' || typeof data === 'number'){
+ 		
+ 		el.appendChild(document.createTextNode(data));
+ 	}else if(data.nodeName){
+ 		let html=$impleEvent.render.cloneElement(data);
+ 		//$impleEvent.beforeAppend()
+ 		el.appendChild(html);
+ 		//SimpleEvent.afterAppend()
+ 		$impleEvent.update(html);
+  }else{
+  	return false;
+  }
+}
+
+
+  
+
+// }
 export default function manageReturns(el,$return,bool){
+
 //if bool===true just sent return to self
 //self can embed either string, number, html or array
- if(bool===true && el.hasAttribute($impleEvent.init.$classname)){
- 	if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
- 		console.log($return);	
- 		//has [data-feed], its there for other purpose, exit
-					if(e.hasAttribute($impleEvent.init.$dataFeed)){ return false};
-								//Not Html then its string or number
-								if(!$return.nodeName){
-									//doest string or number need to append or repalce 
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//need to be append
-												e.appendChild(document.createTextNode($return))
-
-												
-										}else{
-											//clear contaner and put string/number
-											e.innerHTML="";
-											e.appendChild(document.createTextNode($return));
-										}
-								}else{
-									//ITs HTML ELement
-									//every time return new element after cloning
-									let html=$impleEvent.render.cloneElement($return);
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//append
-											//clone element otherwise cant apped to muliple places
-												e.appendChild(html);
-										}else{
-											//replace the container with new content
-											e.innerHTML="";
-											e.appendChild(html);
-
-										}
-										$impleEvent.update(html);
-								}
- 	}
-
+ if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
+  if(bool===true && el.classList.contains($impleEvent.init.$className.replace('.',""))){
+ 	  el.hasAttribute($impleEvent.init.$dataFeed)?false:appendData(el,$return);
  	return ;
-
  }
+}
 //-------------------------------------------------------------------------------------	
 //case-1: Handle String/number/htmlelement
 if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
 	Array.prototype.forEach.call(el.querySelectorAll($impleEvent.init.$className),function(e){
 					//has [data-feed], its there for other purpose, exit
 					if(e.hasAttribute($impleEvent.init.$dataFeed) || e.hasAttribute($impleEvent.init.$dataComponent)){ return false};
-								//Not Html then its string or number
-								if(!$return.nodeName){
-									//doest string or number need to append or repalce 
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//need to be append
-												e.appendChild(document.createTextNode($return))
-
-												
-										}else{
-											//clear contaner and put string/number
-											e.innerHTML="";
-											e.appendChild(document.createTextNode($return));
-										}
-								}else{
-									//ITs HTML ELement
-									//every time return new element after cloning
-									let html=$impleEvent.render.cloneElement($return);
-									if(e.hasAttribute($impleEvent.init.$dataAppend)){
-										//append
-											//clone element otherwise cant apped to muliple places
-												e.appendChild(html);
-										}else{
-											//replace the container with new content
-											e.innerHTML="";
-											e.appendChild(html);
-
-										}
-										$impleEvent.update(html);
-								}
-							
+								
+							appendData(e,$return);
 						 				
 					});//EOFOR
 	return true;
@@ -108,109 +71,113 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 		//delete $return.self;
 	}
 
-	//case 5: Normal
 
-	Array.prototype.forEach.call(el.querySelectorAll($impleEvent.init.$className),function(e){
-					//console.log($return);
-					//-------------------------------------------------------------------------------------	
-						//Check it rightfull container for object returns
-						if(e.hasAttribute($impleEvent.init.$dataFeed)){
-							//Get the key from [data-feed] to retrive value from key-value pair
-							var key=e.getAttribute($impleEvent.init.$dataFeed).trim();
-							//if has value procced
+	//scope 5: self with {key:value}
+
+	Array.prototype.forEach.call(el.querySelectorAll($impleEvent.init.$className+"["+$impleEvent.init.$dataFeed+"]"),function(e){
+			
+							let key=e.getAttribute($impleEvent.init.$dataFeed).trim();
+							let value=null;
 							if(key){
 								//handle nested keys i.e data.person.name.firstname
 								//------------------------------------------------------------------
-									var value=null;
-									var feed=key.split('.');
+									let feed=key.split('.');
+									//if return has no key
 									if(! $return.hasOwnProperty(feed[0])) return false;
-										if(feed.length){
-											if(feed.length==1){
-												value= $return[key];
-											}else if(feed.length>1){
-												var result=$return;
-												for(var j=0; j<feed.length; j++){
-													if(result[feed[j]]){
-														result=result[feed[j]];
-													}else{
-														console.error("Cannot find:" + key + " in  the return " +JSON.stringify($return));
-														break;
-													}
-													
-													//
-												}
-												
-												value=result;
-
-											}
-										}
-								
-
-								//-------------------------------------------------------------------
-								
-
-								if(value){
-									if(typeof value === 'string' || typeof value === 'number' || value.nodeName ){
-										
-												if(!value.nodeName){
-													if(e.hasAttribute($impleEvent.init.$dataAppend)){
-																e.appendChild(document.createTextNode(value))
-															}else{
-																e.innerHTML="";
-																e.appendChild(document.createTextNode(value));
-															}
+									//
+									if(feed.length){
+										if(feed.length==1){
+											value= $return[key];
+										}else if(feed.length>1){
+											let result=$return;
+											for(var j=0; j<feed.length; j++){
+												if(result[feed[j]]){
+													result=result[feed[j]];
 												}else{
-													//console.log(value);
-													//
-													let html=$impleEvent.render.cloneElement(value);
-													if(e.hasAttribute($impleEvent.init.$dataAppend)){
-																e.appendChild(html);
-															}else{
-																e.innerHTML="";
-																e.appendChild(html);
-															}
-
-															$impleEvent.update(html);
+													console.error("Cannot find:" + key + " in  the return " +JSON.stringify($return));
+													break;
 												}
+											}
 											
-										}else{
-											console.error("Only String , Number and Html Element  can be embeded; Cannot embed "+value + "for "+key + "in : "+ e.nodeName.toLowerCase()+ " Html Element");
-											console.log(e);
+											value=result;
+
 										}
-								
+									}
+								//-------------------------------------------------------------------
+							
+								if(value){
+									if(appendData(e,value)===false){
+										console.error("Only String , Number and Html Element  can be embeded; Cannot embed "+value + "for "+key + "in : "+ e.nodeName.toLowerCase()+ " Html Element");
+										console.log(e);
+									}
+									
 								 }//End of Value
 							}else{
 								console.warn("Make sure you have :" + $impleEvent.init.$dataFeed + " attribute to handle given return" + $return )
 							}//end of key
-
-					//}
-				};//ENDOFDatafeedcheck
 					//-------------------------------------------------------------------------------------	
-		});//ENDOFFOREACHLOOp
+		 });//ENDOFFOREACHLOOp
 
-
-
-	//-----------------this is last because it need ot overwrite any other return
+		//-----------------this is last because it need ot overwrite any other return
 	//Scope 6:returnTo spedific element 
-	// return to element spefied in returnTo key
 	if($return.hasOwnProperty('returnTo') && $return.returnTo){
 		//returnTo bydefault "el" key is used to find element, but you can change by $impleEvent.config("$returnTo","element");
 		if($return.returnTo[$impleEvent.init.$returnTo] &&  $return.returnTo[$impleEvent.init.$returnTo].nodeName){
-			$impleEvent.manageReturns($return.returnTo[$impleEvent.init.$returnTo],$return.returnTo.data);
+			$impleEvent.manageReturns($return.returnTo[$impleEvent.init.$returnTo],$return.returnTo.data, true);
 		}else{
-			console.error("returnTo, Element not found:Please give returnTo."+$impleEvent.init.$returnTo + " a valid html element");
-		}
-		
-		
+			console.error("Error@returnTo : Element not found:Please give returnTo."+$impleEvent.init.$returnTo + " a valid html element");
+		}	
 	}
+	//returnToMany 
+	if($return.hasOwnProperty('returnToMany') && Object.prototype.toString.call($return.returnToMany) === '[object Array]'){
+
+		$return.returnToMany.forEach((e,i)=>{
+		 if(e[$impleEvent.init.$returnTo] &&  e[$impleEvent.init.$returnTo].nodeName){
+		 	$impleEvent.manageReturns(e[$impleEvent.init.$returnTo],e.data,true);
+		 }else{
+			console.error("Error@returnToMany : Element not found @ array-index " +i+":Please give "+$impleEvent.init.$returnTo + " a valid html element at index "+ i);
+			}	
+		 
+		})
+	}
+
+	return;
 
 }//EOOBJECTCASE2
 //-------------------------------------------------------------------------------------	
+
+
 //case -3: Array//$impleEvent.init.$dataComponent holds query selector e.g #li 
+
 if(Object.prototype.toString.call($return) === '[object Array]'){
+
+	if(bool==true){
+		
+		let templateElement=null;//template
+		if(el.hasAttribute($impleEvent.init.$dataTemplate)){
+			let htmlTemplate=el.getAttribute($impleEvent.init.$dataTemplate);
+			templateElement=$impleEvent.html(htmlTemplate);
+
+		}else if(el.hasAttribute($impleEvent.init.$dataComponent)){
+			let templateSource=el.getAttribute($impleEvent.init.$dataComponent);
+			templateElement=document.querySelector(templateSource);	
+		}
+
+		if(templateElement && templateElement.nodeName){
+			if(!el.hasAttribute($impleEvent.init.$dataAppend)){
+					el.innerHTML="";
+			}
+
+			appendArray(el,$return,templateElement);
+			return;
+		}
+
+		
+	}
+	//-------------------------------old------
 	//if element has component as temlate
 	//case if elemt have data-template
-	let templateElement=null;
+	let templateElement=null;//template
 	let e=null;
 	if(el.querySelector('['+$impleEvent.init.$dataTemplate+']')){
 		let htmlTemplate=el.querySelector('['+$impleEvent.init.$dataTemplate+']').getAttribute($impleEvent.init.$dataTemplate);
@@ -231,48 +198,42 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 		e=el.querySelector('['+$impleEvent.init.$dataComponent+']');
 	}else{
 		//Need data-template or data-component
-		console.error("Array returns need ["+$impleEvent.init.$dataTemplate+"] or ["+$impleEvent.init.$dataComponent+"] holder: No such holder found ");
+		console.info("Array returns need ["+$impleEvent.init.$dataTemplate+"] or ["+$impleEvent.init.$dataComponent+"] holder: No such holder found ");
 		return false;
 	}
 
-	// if(el.querySelector('['+$impleEvent.init.$dataComponent+']')){
-	// 	let e=el.querySelector('['+$impleEvent.init.$dataComponent+']');
-	// 		let templateElement=document.querySelector(e.getAttribute($impleEvent.init.$dataComponent));
-	// 		if(templateElement && templateElement.nodeName){
+	
 				if(!e.hasAttribute($impleEvent.init.$dataAppend)){
 					e.innerHTML="";
 				}
+				//loops item and appends
+				appendArray(e,$return,templateElement);
 
-				let rawElement=document.createElement("div");
-				//Loop for each item in array
+				
+		
+	}//ENDOF-Object-type-Array
 
-				for(var i=0; i<$return.length;i++){
-					var cloneComponent=$impleEvent.render.cloneElement(templateElement);
+	
+
+}//EOmanageRETURNS
+
+
+
+function appendArray(el,$return,template){
+		  for(var i=0; i<$return.length;i++){
+					let cloneComponent=$impleEvent.render.cloneElement(template);
 					//giving clone element unique id
 					if(cloneComponent.id) cloneComponent.id=cloneComponent.id+"_"+i;
 					cloneComponent.setAttribute("index", i);
-					rawElement.appendChild(cloneComponent);
+					el.appendChild(cloneComponent);
 					//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
 					if(!cloneComponent.childElementCount){
 						//--------------------------------------------------
 						if(typeof $return[i] === 'string' || typeof $return[i] === 'number' || $return[i].nodeName ){
-						if(cloneComponent.hasAttribute($impleEvent.init.$dataFeed)){ return false};
-								if(!$return[i].nodeName){
-									if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
-												cloneComponent.appendChild(document.createTextNode($return[i]))
-											}else{
-												cloneComponent.innerHTML="";
-												cloneComponent.appendChild(document.createTextNode($return[i]));
-											}
-								}else{
-									//consolcloneComponent.log($return[i]);
-									if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
-												cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
-											}else{
-												cloneComponent.innerHTML="";
-												cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
-											}
-								}	
+							if(cloneComponent.hasAttribute($impleEvent.init.$dataFeed)){ return false};
+
+							appendData(cloneComponent,$return[i]);	
+
 							}
 						
 						//-----------------------------------------------------
@@ -280,86 +241,9 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 						$impleEvent.manageReturns(cloneComponent,$return[i]);
 					}
 
-					// $impleEvent.update(cloneComponent);
-				}//END of for loop
-				 e.appendChild(rawElement);
-				$impleEvent.update(rawElement); 
-
-
-		// 	}else{
-		// 		console.error('Unable to find Element for Templating from querySelector:' + e.getAttribute($impleEvent.init.$dataComponent))
-		// 	}//EOIF-template
-		// }else{
-		// 	//incase $impleEvent.init.$dataComponent is not aviable in parent scope
-		// 	console.error("Array returns need ["+$impleEvent.init.$dataComponent+"] holder: No such holder found ");
-		// }//ENDOFDATA_COMPONENT
-	}//ENDOF-Object-type-Array
-
-	// 	if(el.hasAttribute('$impleEvent.init.$dataComponent')){
-	// 		if(el.getAttribute('$impleEvent.init.$dataComponent')){
-	// 		var component=document.querySelector(el.getAttribute('$impleEvent.init.$dataComponent'));
-	// 		if(component.nodeName){
-	// 			if(!el.hasAttribute($impleEvent.init.$dataAppend)){
-	// 				el.innerHTML="";
-	// 			}
-				
-	// 			//foreach item in data
-	// 			//---------------------------------------------------------------
-	// 			for(var i=0; i<$return.length;i++){
-	// 				var cloneComponent=$impleEvent.render.cloneElement(component);
-	// 				el.appendChild(cloneComponent);
-	// 				//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
-	// 				if(!cloneComponent.childElementCount){
-	// 					//--------------------------------------------------
-	// 					if(typeof $return[i] === 'string' || typeof $return[i] === 'number' || $return[i].nodeName ){
-	// 					if(cloneComponent.hasAttribute($impleEvent.init.$dataFeed)){ return false};
-	// 							if(!$return[i].nodeName){
-	// 								if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
-	// 											cloneComponent.appendChild(document.createTextNode($return[i]))
-	// 										}else{
-	// 											cloneComponent.innerHTML="";
-	// 											cloneComponent.appendChild(document.createTextNode($return[i]));
-	// 										}
-	// 							}else{
-	// 								//consolcloneComponent.log($return[i]);
-	// 								if(cloneComponent.hasAttribute($impleEvent.init.$dataAppend)){
-	// 											cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
-	// 										}else{
-	// 											cloneComponent.innerHTML="";
-	// 											cloneComponent.appendChild($impleEvent.render.cloneElement($return[i]));
-	// 										}
-	// 							}	
-	// 						}
-						
-	// 					//-----------------------------------------------------
-	// 				}else{
-	// 					$impleEvent.manageReturns(cloneComponent,$return[i]);
-	// 				}
-					
-	// 			}
-	// 			//------------------------------------------------------------
-
-	// 			//Finally update for any event attached to newlly updated DOM
-	// 			$impleEvent.update(el);
-
-	// 		}else{
-	// 			console.log("Couldn't find element with querySelector :"+el.getAttribute('$impleEvent.init.$dataComponent'));
-
-	// 		}
-	// 	}//EOGETCOMPONENT
-		
-	// }else{//EOHASCOmPOMENT
-	// 	console.error("Couldn't able to handle Array, with out component");
-	// }
-
-	// }//ENDIFArray
-
-
-}//EOmanageRETURNS
-
-
-
-
+					$impleEvent.update(cloneComponent);
+				}//end of for loop
+}
 
 
 

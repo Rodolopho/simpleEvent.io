@@ -6,22 +6,26 @@ Future note as of 26/08/2021
 
 Custom event: call, timeout and interval
 <button event='call=>afterload()'>
-<button event='time=>afterload(,secondArgumentmustbetimeIinms)'>
+<button event='time=>afterload(secondArgumentmustbetimeIinms)'>
 <button event='time=>log(t,500ms)'>
-<button event="click=>user.getFullname(e,'Ram')"></button>
+<button event="click=>user.getFullname('Ram')"></button>
 
  :// data-filter accept a return as argument and must return a valid $return
  :// data-set='querySelctore' will set $dataGet attri and [value] attri to queryseleccted Element, where key and value 
  :// is provides by getData(el,true); which returns [key, value]
 
 
+//Custon invoke()
 
-event="click=>callback(ResevedForEventObject,argument1, argument2.....); click=>alert('What the hell')"
+invoke()
+$impleEvent.invoke(this), invoke the invoke() function
+$impleEvent.invoke(this,'click')// trigger click event on this element
+$impleEvent.invoke(document.getElementById('#id'),'click')
+
+event="click=>callback(argument1, argument2.....); click=>alert('What the event')"
    1) Arguments:- // reference makeArguments @callback.js
      'agument'           			: 'string';  '' or " "
-     #argumet 						: html elemnt with id '#argumet' no quotes // #id
-     #argument.attribute			: 		return object with get, set, value and element
-     #argument.attr.value 			: returns value
+     <parent><next><first><last><previous>
      <querySelctorall> 				: return queryselctor all // <html>
      <queryselctor>[0] 				: queryselector and nth item in arrya position
      <querySelctor>[0].attr 		: return object with get, set, value and element;
@@ -45,13 +49,22 @@ event="click=>callback(ResevedForEventObject,argument1, argument2.....); click=>
 
 
 
-        Return Array
+        Return Array , 
         --------------
         Requires holder for template defination
+        every item will get index attribute by default 
          data-template for incline string html defination
          data-component where queryselctor is supplied to borrow templeplate 
 
          object type item requres wrapper with child element having  .return [data-feed=key]
+
+         return {
+            returnTo:{el:el, data:'somedate'},
+            returnToMany:[{el:el, data:[1,2,3,4,5]}],
+            self:"www.yourname.com",
+            name:'bikr',
+            lname:'john'
+         }
        
 
     data-get|data-validate|data-feed

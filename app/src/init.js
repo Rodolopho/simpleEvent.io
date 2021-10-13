@@ -33,6 +33,7 @@ export let init={
 			$returnTo:"el",//define your outer scope element holder
 			$root:document,//by default
 			$global:document,//by default 
+			$defaultTemplate:'<li class="return-list-item"></li>',//default wrapper for array return item
 	
 };
 

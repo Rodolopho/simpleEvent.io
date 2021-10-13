@@ -32,19 +32,14 @@
 				  			
 							
 							//----------Arguments----------------------------------------
-									// process arguments 
-									console.log(e.type);
+									
 									//  let $args=args.length?$impleEvent.argumentsHandler(el,args):args;
 									// let $args=args;
-									// $args.push([1]);
-									let $args=$impleEvent.argumentsHandler(el,args);
-
-									//adds event as first arguments in argument array
-
-									//$args.unshift(e);
-
-									//adds event aslast arguments in argument array
 									
+									let $args=$impleEvent.argumentsHandler(el,args);
+									//adds event as first arguments in argument array
+									//$args.unshift(e);
+									$args.push(e);
 									// invoke callback with given arguments and assign this to current elemnt
 									let $return=callback.apply(el,$args);
 									
@@ -52,7 +47,7 @@
 
 							
 				//------------------RETURN :-If it has return the handle return----------------------------	
-							 if($return || typeof $return === "string"){//for "" "   "
+							 if($return || typeof $return === "string" ||typeof $return === "number"){//for "" "   "
 								// if($return ){//for "" "   "
 											 
 								 // --------------------data-filter-------------------
@@ -70,10 +65,10 @@
 											console.error("Unable to apply filter " +filter +": Missing filter method");
 										}
 
-										if(!$return){
-											console.error("Error in "+$impleEvent.init.$dataFilter+" Must return value with valid data type; check return from '"+filter+ "' method");
-											return false;
-										}					
+										// if(!$return && typeof $return !== "string"){
+										// 	console.error("Error in "+$impleEvent.init.$dataFilter+" Must return value with valid data type; check return from '"+filter+ "' method");
+										// 	return false;
+										// }					
 								}//ENDIfDATAFILTER
 
 

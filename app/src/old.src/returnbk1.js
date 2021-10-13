@@ -2,40 +2,38 @@
 //----scope---global, parent-grandparent-self
 //------datatype-------
 export default function manageReturns(el,$return,bool){
-
 //if bool===true just sent return to self
 //self can embed either string, number, html or array
- if(bool===true && el.classList.contains($impleEvent.init.$className.replace('.',""))){
- 	console.log(bool);
+ if(bool===true && el.hasAttribute($impleEvent.init.$classname)){
  	if(typeof $return === 'string' || typeof $return === 'number' || $return.nodeName ){
+ 		console.log($return);	
  		//has [data-feed], its there for other purpose, exit
-
-					if(el.hasAttribute($impleEvent.init.$dataFeed)){ return false};
+					if(e.hasAttribute($impleEvent.init.$dataFeed)){ return false};
 								//Not Html then its string or number
 								if(!$return.nodeName){
 									//doest string or number need to append or repalce 
-									if(el.hasAttribute($impleEvent.init.$dataAppend)){
+									if(e.hasAttribute($impleEvent.init.$dataAppend)){
 										//need to be append
-												el.appendChild(document.createTextNode($return))
+												e.appendChild(document.createTextNode($return))
 
 												
 										}else{
 											//clear contaner and put string/number
-											el.innerHTML="";
-											el.appendChild(document.createTextNode($return));
+											e.innerHTML="";
+											e.appendChild(document.createTextNode($return));
 										}
 								}else{
 									//ITs HTML ELement
 									//every time return new element after cloning
 									let html=$impleEvent.render.cloneElement($return);
-									if(el.hasAttribute($impleEvent.init.$dataAppend)){
+									if(e.hasAttribute($impleEvent.init.$dataAppend)){
 										//append
 											//clone element otherwise cant apped to muliple places
-												el.appendChild(html);
+												e.appendChild(html);
 										}else{
 											//replace the container with new content
-											el.innerHTML="";
-											el.appendChild(html);
+											e.innerHTML="";
+											e.appendChild(html);
 
 										}
 										$impleEvent.update(html);
@@ -196,21 +194,14 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 	//Scope 6:returnTo spedific element 
 	// return to element spefied in returnTo key
 	if($return.hasOwnProperty('returnTo') && $return.returnTo){
-		console.log(1);
 		//returnTo bydefault "el" key is used to find element, but you can change by $impleEvent.config("$returnTo","element");
 		if($return.returnTo[$impleEvent.init.$returnTo] &&  $return.returnTo[$impleEvent.init.$returnTo].nodeName){
-			console.log($return.returnTo[$impleEvent.init.$returnTo],$return.returnTo.data, true);
-			$impleEvent.manageReturns($return.returnTo[$impleEvent.init.$returnTo],$return.returnTo.data, true);
+			$impleEvent.manageReturns($return.returnTo[$impleEvent.init.$returnTo],$return.returnTo.data);
 		}else{
 			console.error("returnTo, Element not found:Please give returnTo."+$impleEvent.init.$returnTo + " a valid html element");
 		}
 		
 		
-	}
-	//returnToMany 
-	if($return.hasOwnProperty('returnToMany') && Object.prototype.toString.call($return.returnToMany) === '[object Array]'){
-
-		$return.returnToMany.forEach((e)=>{ $impleEvent.manageReturns(e[$impleEvent.init.$returnTo],e.data,true);})
 	}
 
 }//EOOBJECTCASE2
@@ -260,7 +251,7 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 					//giving clone element unique id
 					if(cloneComponent.id) cloneComponent.id=cloneComponent.id+"_"+i;
 					cloneComponent.setAttribute("index", i);
-					e.appendChild(cloneComponent);
+					rawElement.appendChild(cloneComponent);
 					//check if its standlone i.e single element without childs e.g <li id="li" class="return"></li>
 					if(!cloneComponent.childElementCount){
 						//--------------------------------------------------
@@ -289,8 +280,10 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 						$impleEvent.manageReturns(cloneComponent,$return[i]);
 					}
 
-					$impleEvent.update(cloneComponent);
+					// $impleEvent.update(cloneComponent);
 				}//END of for loop
+				 e.appendChild(rawElement);
+				$impleEvent.update(rawElement); 
 
 
 		// 	}else{

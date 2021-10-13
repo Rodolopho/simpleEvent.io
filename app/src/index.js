@@ -1,10 +1,10 @@
 
 import {init} from './init.js';
 import {render} from "./render.js";
-import eventManager from "./eventbeta.js";
+import eventManager from "./event.js";
 import callbackHandler from "./callback.js";
-import argumentsHandler from "./argumentsHandlereditfinal.js";
-import  manageReturns from "./returnbkedit.js";
+import argumentsHandler from "./argumentsHandler.js";
+import  manageReturns from "./return.js";
 import  getData from "./retrive.js";
 import  setData from "./assign.js";
 import {core} from './core.js';
@@ -43,11 +43,14 @@ import dataStore from "./store.js";
 	$impleEvent.setData=setData;
 	// $impleEvent.getDataStore=getDataStore;
 	// $impleEvent.setDataStore=setDataStore;
-	$impleEvent.dataStore=dataStore;	 
+	$impleEvent.dataStore=dataStore;	
+
+
 	//------------------------------------------------------------------------------------------	
 //Container or holders
 	//conatiner to hold callbacks or event handlers supplied by user using $impleEvent.add(), method
 	$impleEvent.callbacks={};
+
 
 	// callbacks conatiner for notation i.e user.getFullName using $impleEvent.addIn('user','getFullName', function(){})
 	$impleEvent.inCallbacks={};
@@ -251,7 +254,7 @@ import dataStore from "./store.js";
 	//this function is called by $impleEvent.getData(); which passes e, name, value to this function
 	//only applicable to user input not applicable to getAttribute("value");
 	$impleEvent.validate=function(el,name, value){//e=event, name=name attribute value e.g name, email
-			  if(this.core.validate.hasOwnProperty('name')){}
+			  if(this.core.validate.hasOwnProperty(name)){}
 			};
 	//------------------------------------------------------------------------------------------	
 	//--------------------------------------------------------------------

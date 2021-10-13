@@ -1,6 +1,110 @@
 export let core={
+//---------------developer and debug
+	log:function(info){
+		console.log(info);
+	},
+	logEvent:function(event){
+		console.log(event.type,"\n",event);
+	},
+	logFunc:function(callbackName,arg1,arg2,arg3,arg4,arg5){
+		callbackName=callbackName.trim();
+		if($impleEvent.callbacks.hasOwnProperty(callbackName)){
+			console.log($impleEvent.callbacks[callbackName](event,arg1,arg2,arg3,arg4,arg5));
+		}else if(core.hasOwnProperty(callbackName)){
+			console.log(core[callbackName](event,arg1,arg2,arg3,arg4,arg5));
+		}
+		
+		
+	},
+	return:function(a,b,e){
+		if(isFinite(e)){
+			//a is time
+			a=b;
+			e={type:"interval/timeout"};
+		}
 
-	close:function(event,ele,bool){
+		if(a){
+			return a;
+		}else{
+
+			console.warn("Returning empty string  on " + e.type);
+			return " ";
+		}
+		
+	},
+	returnTo:function(id,a,b,e){
+		
+		if(isFinite(e)){
+			//a is time
+			id=a;
+			a=b;
+			e={type:"interval/timeout"};
+
+		}
+		if( a && document.getElementById(id)){
+			a=a.replace(/\/s/g," ").trim();
+			return {
+				returnTo:{
+					el:document.getElementById(id),
+					data:a
+				}
+			}
+		}else{
+			console.warn("Returning empty string  on " + e.type);
+			return " ";
+		}
+
+	},
+	//onevent when calling timeout function 
+	timeout:function(a,b,e){
+			if(!isFinite(b)){
+				console.log("please Provide Time in ms; for timeout function");
+				return false;
+
+			}
+			
+			if($impleEvent.core.hasOwnProperty(a)){
+				let timer=setTimeout($impleEvent.core[a].bind(this), b);
+					
+				}else if($impleEvent.callbacks.hasOwnProperty(a)){
+					let timer=setTimeout($impleEvent.callbacks[a].bind(this,[timer,b]), e);
+					
+
+				//case 3: no callback is define
+				}else{
+					console.error("Can't Found Method:"+a+" ,Please Register event handler using '$impleEvent.add()' method?");
+					return false;
+
+				}	
+
+
+		},
+
+		interval:function(a,b,e){
+			if(!isFinite(b)){
+				console.log("please Provide Time in ms; for interval function");
+				return false;
+
+			}
+			if($impleEvent.core.hasOwnProperty(a)){
+				console.log("wow");
+				let interval=setInterval($impleEvent.core[a].bind(this,[interval,b]), e);
+					
+				}else if($impleEvent.callbacks.hasOwnProperty(a)){
+					let interval=setInterval($impleEvent.callbacks[a].bind(this,[interval,b]), e);
+					
+
+				//case 3: no callback is define
+				}else{
+					console.error("Can't Found Method:"+a+" ,Please Register event handler using '$impleEvent.add()' method?");
+					return false;
+
+				}	
+
+
+		},
+	//-------------------
+	close:function(ele,bool){
 		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
 		if(el){
 			if(el.style.display=="none") {return false};
@@ -16,7 +120,7 @@ export let core={
 		}
 
 	},
-	openClose:function(event,id,bool){
+	openClose:function(id,bool){
 		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
 		if(el){
 			if(el.style.display=="none") {
@@ -34,25 +138,10 @@ export let core={
 		}
 
 	},
-	log:function(event,info){
-		console.log(info);
-	},
-	logEvent:function(event){
-		console.log(event.type,"\n",event);
-	},
-	logFunc:function(event,callbackName,arg1,arg2,arg3,arg4,arg5){
-		callbackName=callbackName.trim();
-		if($impleEvent.callbacks.hasOwnProperty(callbackName)){
-			console.log($impleEvent.callbacks[callbackName](event,arg1,arg2,arg3,arg4,arg5));
-		}else if(core.hasOwnProperty(callbackName)){
-			console.log(core[callbackName](event,arg1,arg2,arg3,arg4,arg5));
-		}
-		
-		
-	},
+	
 
 	//----------------------------core-------
-	typewriter:function(e,a,b){
+	typewriter:function(a,b){
 			//if a===true the chnage event to keyup
 		//if(this.hasAttribute($impleEvent.init.$dataGet)){
 			
@@ -106,7 +195,7 @@ export let core={
 
 	},
 	
-	dataChanger:function(e,a,b){
+	dataChanger:function(a,b){
 			//if a===true the chnage event to keyup
 		if(this.hasAttribute($impleEvent.init.$dataGet)){
 			
@@ -164,7 +253,7 @@ export let core={
 		}
 		
 	},
-	carousel:function(e,a,b){
+	carousel:function(a,b){
 		let images=this.getElementsByTagName("img");
 		if(!this.hasAttribute("index")){this.setAttribute("index",0);}
 		let index=parseInt(this.getAttribute('index'));
@@ -180,7 +269,7 @@ export let core={
 		    
 	},
 	//-----------------------class------------------------
-	addClassName:function(e,a,id){
+	addClassName:function(a,id){
 		let el=id.nodeType?id:(id=="parent")?this.parentNode:document.getElementById(id);
 		let ele=this;
 		if(id && document.getElementById(id)){
@@ -191,14 +280,14 @@ export let core={
 
 
 	},
-	removeClassName:function(e,a,id){
+	removeClassName:function(a,id){
 		let ele=this;
 		if(id && document.getElementById(id)){
 			ele=document.getElementById(id);
 		}
 		ele.classList.remove(a);
 	},
-	toggleClassName:function(e,a,id){
+	toggleClassName:function(a,id){
 		let ele=this;
 		if(id && document.getElementById(id)){
 			ele=document.getElementById(id);
@@ -206,7 +295,7 @@ export let core={
 		ele.classList.toggle(a);
 	},
 	
-	css:function(e,property,value,id){
+	css:function(property,value,id,e){
 		this.style.transition="all 0.35s";
 		if(arguments.length==3){
 			this.style[property]=value;
@@ -220,92 +309,7 @@ export let core={
 		}
 
 	},
-	return:function(e,a,b){
-		if(isFinite(e)){
-			//a is time
-			a=b;
-
-		}
-		if(a){
-			return a;
-		}else{
-
-			console.warn("Returning empty string  on " + e.type);
-			return " ";
-		}
-
-	},
-	returnTo:function(e,id,a,b){
-		
-		if(isFinite(e)){
-			//a is time
-			id=a;
-			a=b;
-			e={type:"interval/timeout"};
-
-		}
-		if( a && document.getElementById(id)){
-			a=a.replace(/\/s/g," ").trim();
-			return {
-				returnTo:{
-					el:document.getElementById(id),
-					data:a
-				}
-			}
-		}else{
-			console.warn("Returning empty string  on " + e.type);
-			return " ";
-		}
-
-	},
-	//onevent when calling timeout function 
-	timeout:function(e,a,b){
-			if(!isFinite(b)){
-				console.log("please Provide Time in ms; for timeout function");
-				return false;
-
-			}
-			
-			if($impleEvent.core.hasOwnProperty(a)){
-				let timer=setTimeout($impleEvent.core[a].bind(this), b);
-					
-				}else if($impleEvent.callbacks.hasOwnProperty(a)){
-					let timer=setTimeout($impleEvent.callbacks[a].bind(this,[e,timer]), b);
-					
-
-				//case 3: no callback is define
-				}else{
-					console.error("Can't Found Method:"+a+" ,Please Register event handler using '$impleEvent.add()' method?");
-					return false;
-
-				}	
-
-
-		},
-
-		interval:function(e,a,b){
-			if(!isFinite(b)){
-				console.log("please Provide Time in ms; for interval function");
-				return false;
-
-			}
-			if($impleEvent.core.hasOwnProperty(a)){
-				console.log("wow");
-				let interval=setInterval($impleEvent.core[a].bind(this,[e,interval]), b);
-					
-				}else if($impleEvent.callbacks.hasOwnProperty(a)){
-					let interval=setInterval($impleEvent.callbacks[a].bind(this,[e,interval]), b);
-					
-
-				//case 3: no callback is define
-				}else{
-					console.error("Can't Found Method:"+a+" ,Please Register event handler using '$impleEvent.add()' method?");
-					return false;
-
-				}	
-
-
-		},
+	
 		validate:{
 			email:{
 				test:/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/,
@@ -328,21 +332,6 @@ export let core={
 };
 
 
-
-
-
-// ',1,[2,(3),4],3,{a,b,c}, [a,b,c,d]'.replace(/([/[][a-zA-Z0-9_-,]*[\]]|[{].*[}])/g,function(e){
-// 	return e.replace(/[,]/g,':;:')
-// })
-// .split(/[,]/).map(function(e){
-// 	if(e.match(/([/[].+[\]])/g)){
-// 		 return e.replace(/[\[\]]/g,"").split(':;:');
-// 	}else if(e.match(/([{].+[}])/g)){
-// 		return e.replace(/:;:/g,",");
-// 	}else{
-// 		return e;
-// 	}
-// 	})
 
 
 
