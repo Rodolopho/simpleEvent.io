@@ -295,6 +295,7 @@ import dataStore from "./store.js";
 	$impleEvent.register=function(a,b){
 		return this.add(a,b);
 	};
+	//add variable and its value; $impleEvent.vars[key];
 	$impleEvent.$add=function(){
 		if(Object.prototype.toString.call(a) === '[object Object]'){
 				//its object patter={variable:'data'}

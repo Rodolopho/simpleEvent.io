@@ -253,18 +253,18 @@ export let core={
 		}
 		
 	},
-	carousel:function(a,b){
-		let images=this.getElementsByTagName("img");
+	carousel:function(a,b,elements){
+		
 		if(!this.hasAttribute("index")){this.setAttribute("index",0);}
 		let index=parseInt(this.getAttribute('index'));
 
-		for(let i=0;i<images.length;i++){
-			images[i].style.display="none";
+		for(let i=0;i < elements.length;i++){
+			elements[i].style.display="none";
 		}
 
 		index++;
 		if(index>images.length){index=1}
-			images[index-1].style.display="block";
+			elements[index-1].style.display="block";
 		this.setAttribute("index",index);
 		    
 	},

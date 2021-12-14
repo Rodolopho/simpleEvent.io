@@ -151,7 +151,7 @@ if(Object.prototype.toString.call($return) === '[object Object]'){
 
 if(Object.prototype.toString.call($return) === '[object Array]'){
 
-	if(bool==true){
+	if(bool==true){// check if self is a holder
 		
 		let templateElement=null;//template
 		if(el.hasAttribute($impleEvent.init.$dataTemplate)){
@@ -196,6 +196,11 @@ if(Object.prototype.toString.call($return) === '[object Array]'){
 		}
 
 		e=el.querySelector('['+$impleEvent.init.$dataComponent+']');
+	}else if(el.querySelector('['+$impleEvent.init.$dataForEach+']')){
+		e=el.querySelector('['+$impleEvent.init.$dataForEach+']').parentNode;
+		templateElement=el.querySelector('['+$impleEvent.init.$dataForEach+']');
+		
+
 	}else{
 		//Need data-template or data-component
 		console.info("Array returns need ["+$impleEvent.init.$dataTemplate+"] or ["+$impleEvent.init.$dataComponent+"] holder: No such holder found ");

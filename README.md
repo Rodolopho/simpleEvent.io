@@ -3,9 +3,9 @@
 ### There are two main area in Simple Event:
 #### 1) You provide event attibute to your html element, where you can define event-type, callback for handling event, optional arguments which all mention in arrow function format, where argument is eg.
 ```html
-<button event="click=>openModal(,id)">Open Modal</button>//(,argument) or (e,argument)
+<button event="click=>openModal(id)">Open Modal</button>//(argument) or (argument)
 
-<button event="click=>closeModal(,id) click=>alert()">close</button>
+<button event="click=>closeModal(id) click=>alert()">close</button>
 ```
 ###### Here you proving a callback function "openModal and closeModal" for event type "click" on above element.You can provide muliple events just seperating it with ',' or space.ie 
 ```html
@@ -15,12 +15,12 @@
 #### 2) Once you declare event attribute with atleast event type and callback function, second thing you do is register callback using $impleEvent.register(); or $impleEvent.add(); method. 
 
 ```javascript
-    $impleEvent.add("openModal", function(e,id){
+    $impleEvent.add("openModal", function(id,e){
         //where e is event;
         document.getElementById(id).style.display="block";
 
       })
-      .add("closeModal", function(e,id){
+      .add("closeModal", function(id,e){
           if(confirm("Are you sure want to close ?")){
             document.getElementById(id).style.display="none";
           }
@@ -35,7 +35,7 @@ Lets suppose you have a Subscribe field .
 ```html
 ......
 <div class="subscribe">
-  <input event="change=>validate(,email)">
+  <input event="change=>validate(email)">
   <span class="return help"></span>
 </div>
 ......
@@ -46,7 +46,7 @@ Lets suppose you have a Subscribe field .
 
 
 ```javascript
-$impleEvent.add('validate',function(e,field){
+$impleEvent.add('validate',function(field){
         var match={
           email:{
             test:/^\w+@+?\.$/,
@@ -72,7 +72,7 @@ $impleEvent.add('validate',function(e,field){
       });
 ```
 #### Here we have few things to note, every callback function is bind to the event target element where event attribute is define , we can access the element via "this" inside the callback function.
-The first argument of callbacks will be always "event".
+The last argument of callbacks will be always "event".
 You can caputure the returns inside a html element with "return" class name. Returns must be either, string, number or Html element. If you want to return more than single data, you can use object as above. And when you required to send list of data which can be looped you can use array as a return. 
 
 When you just return data from your callback it search for a element with class name "return"  by queryselector form its parentElement of your current event target element to embed your return. You should alway use empty element with class name "return " as  a place holder for return element to embed, however you can also append the return data if you desire to so by adding 'data-append' attribute on the placeholder element .
@@ -84,7 +84,7 @@ Note:There is $imple.createElement(TagName,{//attribute}) helper function to cre
 ......
 <div class="box">
   <h2 >You are fan of<span class="return"> click or double click the button</span> </h2>
-  <button event="click=>getName(Hary Poter) dbclick=>getName(John,show)">Click to know ?</button>
+  <button event='click=>getName("Hary Poter") dbclick=>getName("John","show")'>Click to know ?</button>
 </div>
 
 <div class="box">
@@ -99,12 +99,12 @@ Note:There is $imple.createElement(TagName,{//attribute}) helper function to cre
 ```
 
 ```javascript
-$impleEvent.add('getName',function(e,a,b){
+$impleEvent.add('getName',function(a,b,e){
         if(e.type=='dblclick') e.removeEventListener();
       return a+" "+b;
   });
 
-$impleEvent.add('addTask',function(e){
+$impleEvent.add('addTask',function(){
   var input =$impleEvent.getData(document.getElementById('task-input'));
   if(input.task){
     return $impleEvent.createElement("li",{
@@ -141,7 +141,7 @@ $impleEvent.add('getProfile',function(e){
     };
 });
 
-$impleEvent.add('log', function(e,a){
+$impleEvent.add('log', function(a,e){
   console.log(a);
 
 });
@@ -169,7 +169,7 @@ $impleEvent.add('getCountry',function(e){
   });
 
 ```
-Whenever array is returned from callback, it will first check for element with   attribute"data-component" in its parentElement scope, and its value is used as query selector for template element, the template element then converted to template and for each item in array, an instance of template is appended to the element with appropriate embeded item data.
+Whenever array is returned from callback, it will first check for element with   attribute "data-component" or "data-template" in its parentElement scope, and its value is used as query selector for template element, the template element then converted to template and for each item in array, an instance of template is appended to the element with appropriate embeded item data.
 
 Each item of array can hold data type of string, Number, HTML or Object but array.
 
@@ -213,10 +213,10 @@ $impleEvent.add('returnData',function(e){
 #### Apart from regular event, you can use setTimeout and setInterval as regular event, using timeout and interval respectively  in event attribute. For Example
 ```html
 <div class="Time float-right">
-    <h2 event="interval=>updateTime(,100)" class="return show-time">00:00:00</h2>
+    <h2 event="interval=>updateTime(100)" class="return show-time">00:00:00</h2>
 </div>
 <div class="Time">
-  <h2 event="timeout=>updateTime(,100)" class="return show-time"></h2>
+  <h2 event="timeout=>updateTime(100)" class="return show-time"></h2>
   <button event="click=>updateTime">Show Lastest Time</button>
 </div>
 ```

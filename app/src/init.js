@@ -24,6 +24,7 @@ export let init={
 			$dataSet:'data-set',
 			$dataStore:'data-store',
 			$dataAppend:"data-append",//APPENDS or replace 
+			$dataForEach:"data-for-each",//APPENDS or replace 
 			// $dataError:"data-error",//for error
 			// $dataMessage:"data-message",
 			// $dataNotification:'data-notification', 
