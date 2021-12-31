@@ -12,7 +12,7 @@ export default function eventManager(el,eventList,invoke){
 			(function(){
 				let [event,args,callback]=[null, [], null];
 				//
-				if($impleEvent.init.$useArrow===true){
+				//if($impleEvent.init.$useArrow===true){
 					if($impleEvent.init.$seperatorArrow.test(eventList[i])){
 						 [,event,callback,args]=$impleEvent.init.$seperatorArrow.exec(eventList[i]);
 						if(args && args.replace(/^[(]|[)]$/g,"").trim() ){
@@ -33,18 +33,18 @@ export default function eventManager(el,eventList,invoke){
 						return false;
 					}
 
-				}else{
-					  data=eventList[i].split($impleEvent.init.$seperator);
+				// }else{
+				// 	  data=eventList[i].split($impleEvent.init.$seperator);
 
-				//check event data has atleast eventname and callback
-					if(data.length<2){
-						console.warn("Insufficient Agruments: Must provided atleast eventname and callback  or event attribute format is not understood:used seperator is "+$impleEvent.init.$seperator);
-						return false;
-					}
-					 event=data[0];
-					 callback=data[1];
-					args=data.slice(2);	
-				}
+				// //check event data has atleast eventname and callback
+				// 	if(data.length<2){
+				// 		console.warn("Insufficient Agruments: Must provided atleast eventname and callback  or event attribute format is not understood:used seperator is "+$impleEvent.init.$seperator);
+				// 		return false;
+				// 	}
+				// 	 event=data[0];
+				// 	 callback=data[1];
+				// 	args=data.slice(2);	
+				// }
 //-----------------incase of invoke call---------------------
 				if(invoke){
 					if(event===invoke){

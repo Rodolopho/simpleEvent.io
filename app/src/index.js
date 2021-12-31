@@ -6,9 +6,9 @@ import callbackHandler from "./callback.js";
 import argumentsHandler from "./argumentsHandler.js";
 import  manageReturns from "./return.js";
 import  getData from "./retrive.js";
-import  setData from "./assign.js";
+//import  setData from "./assign.js";
 import {core} from './core.js';
-import dataStore from "./store.js";
+// import dataStore from "./store.js";
 // import Datastore from './dataStore.js';
 //------------------------------------------------------------------------------------------
 	

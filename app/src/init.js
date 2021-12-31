@@ -16,6 +16,8 @@ export let init={
 			$dataFeed:"data-feed",//data-return aslo sounds great
 			//gets data with key and value, data-get="name" value="my name"
 			$dataGet:"data-get",//
+			//Handle argument false
+			$handleArgument:true;
 			//for array return container 
 			$dataTemplate:'data-template',
 			$dataComponent:'data-component',
