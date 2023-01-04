@@ -41,7 +41,7 @@
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "jslint": "^0.12.1",
-    "rewire": "^3.0.2",
+    "rewire": "^6.0.0",
     "sinon": "^4.5.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
